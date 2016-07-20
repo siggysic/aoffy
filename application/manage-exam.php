@@ -2,27 +2,17 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../lib/css/custom.css">
 
-    <script type="text/javascript" src="../lib/js/jquery-3.1.0.min.js"></script>
+    <script src="../lib/js/jquery-1.12.4.min.js"></script>
+    <script src="../lib/js/bootstrap.min.js"></script>
 
-    <style type="text/css">
-      .padding-rgiht{
-        padding-right: 5px;
-      }
-      .footer{
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 40px;
-        background-color: #e6e6e6;
-      }
-    </style>
   </head>
 
   <body>
     <div class="row">
-<!--       <img src="img/kmutnb.png" class="img-logo"> -->
       <div class="container">
+        <!-- <img src="img/kmutnb.png" class="img-responsive img-logo"> -->
         <h3 class="text-center">ระบบจัดการตารางสอบ</h3>
         <h4 class="text-right">คณะครุศาสตร์อุตสาหกรรม</h4>
       </div>
@@ -45,9 +35,9 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#"><i class="glyphicon glyphicon-home padding-rgiht"></i>หน้าหลัก</a></li>
-              <li><a href="#"><i class="glyphicon glyphicon-th-list padding-rgiht"></i>จัดตารางสอบ</a></li>
-              <li><a href="#"><i class="glyphicon glyphicon-search padding-rgiht"></i>ตรวจสอบตารางสอบ</a></li>
+              <li class="active"><a href="#"><i class="glyphicon glyphicon-home padding-right"></i>หน้าหลัก</a></li>
+              <li><a href="#"><i class="glyphicon glyphicon-th-list padding-right"></i>จัดตารางสอบ</a></li>
+              <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="#">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="#">ติดต่อเรา</a></li>
             </ul>
@@ -59,8 +49,8 @@
     <div class="row">
       <div class="container">
         <div class="col-sm-2">
-          <ul id="sidebar" class="nav nav-stacked affix">
-            <li></li>
+          <a href="#sidebar" data-toggle="collapse"><i class="glyphicon glyphicon-align-justify"></i></a>
+          <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse">
             <li><a href="#">ข้อมูลวิชาสอบ</a></li>
             <li><a href="#">ข้อมูลห้องสอบ</a></li>
             <li><a href="#">ข้อมูลผู้สอบ</a></li>
@@ -72,13 +62,64 @@
             <h3>จัดตารางสอบ</h3><hr/>
             <footer>ข้อมูลรายวิชาสอบ</footer>
           </blockquote>
+          <div class="container-fluid">
+            <table class="table table-striped">
+              <thread>
+                <th>วันที่</th>
+                <th>เวลา</th>
+                <th>รหัสวิชา</th>
+                <th>ชื่อวิชา</th>
+                <th>ตอนที่</th>
+              </thread>
+              <tr>
+                <td>12/09/59</td>
+                <td>12.09 น.</td>
+                <td>5002923</td>
+                <td>Thai study</td>
+                <td>4</td>
+              </tr>
+            </table>
+            <div class="container-fluid text-center">
+              <button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-plus padding-right"></i>เพิ่ม</button>
+            </div>
+          </div><hr/>
+          <div class="container-fluid">
+            <table class="table table-bordered">
+              <thread>
+                <th>วันที่</th>
+                <th>เวลา</th>
+                <th>รหัสวิชา</th>
+                <th>ชื่อวิชา</th>
+                <th>ตอนที่</th>
+                <th>ตัวเลือก</th>
+              </thread>
+              <tr>
+                <td>12/09/59</td>
+                <td>12.09 น.</td>
+                <td>5002923</td>
+                <td>Thai study</td>
+                <td>4</td>
+                <td><i class="glyphicon glyphicon-pencil padding-right icon-color-edit"></i>| <i class="glyphicon glyphicon-remove icon-color-delete"></i></td>
+              </tr>
+              <tr>
+                <td>12/09/59</td>
+                <td>12.09 น.</td>
+                <td>5002923</td>
+                <td>Thai study</td>
+                <td>4</td>
+                <td><i class="glyphicon glyphicon-pencil padding-right icon-color-edit"></i>| <i class="glyphicon glyphicon-remove icon-color-delete"></i></td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="footer">
-      <h5 class="text-center">คณะครุฑศาสตร์อุตสาหกรรม มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</h5>
-    </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom footer">
+      <div class="container">
+        <h5 class="text-center">คณะครุฑศาสตร์อุตสาหกรรม มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</h5>
+      </div>
+    </nav>
 
   </body>
 
