@@ -56,8 +56,8 @@
       </nav>
     </div>
     
-    <div class="container">
-      <div class="row">
+    <div class="row">
+      <div class="container">
         <div class="col-sm-2">
           <ul id="sidebar" class="nav nav-stacked affix">
             <li></li>
