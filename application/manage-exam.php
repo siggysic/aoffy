@@ -1,9 +1,15 @@
+<?
+  require_once 'connect.php';
+
+  $sql = "SELECT * FROM subject";
+  $result = mysql_query($sql) or die('Select Error.');
+?>
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="../lib/css/custom.css">
-
     <script src="../lib/js/jquery-1.12.4.min.js"></script>
     <script src="../lib/js/bootstrap.min.js"></script>
 
@@ -60,7 +66,7 @@
         <div class="col-sm-10">
           <blockquote>
             <h3>จัดตารางสอบ</h3><hr/>
-            <footer>ข้อมูลรายวิชาสอบ</footer>
+            <footer>ข้อมูลรายวิชาที่จัดสอบสอบ</footer>
           </blockquote>
           <div class="container-fluid">
             <table class="table table-striped">
@@ -71,13 +77,21 @@
                 <th>ชื่อวิชา</th>
                 <th>ตอนที่</th>
               </thread>
-              <tr>
-                <td>12/09/59</td>
-                <td>12.09 น.</td>
-                <td>5002923</td>
-                <td>Thai study</td>
-                <td>4</td>
-              </tr>
+
+              <?php
+                while($subject = mysql_fetch_assoc($result)) {
+              ?>
+                <tr>
+                  <td><?php echo $subject['day'] ?></td>
+                  <td><?php echo $subject['start_time'] . ' - ' . $subject['end_time'] ?></td>
+                  <td><?php echo $subject['subject_number'] ?></td>
+                  <td><?php echo $subject['name'] ?></td>
+                  <td><?php echo $subject['section'] ?></td>
+                </tr>
+              <?php
+                }
+              ?>
+
             </table>
             <div class="container-fluid text-center">
               <button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-plus padding-right"></i>เพิ่ม</button>
