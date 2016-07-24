@@ -1,8 +1,47 @@
-<?
+<?php
   require_once 'connect.php';
 
-  $sql = "SELECT * FROM subject";
-  $result = mysql_query($sql) or die('Select Error.');
+  if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
+    //main manage_exam concept.
+    $i = 0;
+
+    //First, get department will take exam in term and year as you want.
+    $sqlGetDept = "SELECT std.department_code AS dept_code, dep.name AS dept_name, std.subject_number AS subject_code, std.section AS section FROM student AS std, department AS dep WHERE std.term = " . $_POST['term'] ." AND std.year = " . $_POST['year'] . " AND std.department_code = dep.code GROUP BY std.department_code";
+    $dept = mysql_query($sqlGetDept) or die('Get department error.');
+    $num_rows_dept = mysql_num_rows($dept);
+
+    while($depts = mysql_fetch_assoc($dept)) {
+      //Second, count student each department.
+      $sqlCountStd = "SELECT COUNT(department_code) AS dep_sum FROM student WHERE department_code = '" . $depts['dept_code'] . "'";
+      $std = mysql_query($sqlCountStd) or die('Count student error.');
+
+      while($stds = mysql_fetch_assoc($std)) {
+        //save department_code and count of student in array.
+        $dataStd[$i] = array($depts['dept_code'], $stds['dep_sum']);
+        $i++;
+      }
+    }    
+
+    //Third, get subject have exam in term and year as you want.
+    $sqlGetSubject = "SELECT * FROM subject WHERE term = " . $_POST['term'] . " AND year = " . $_POST['year'];
+    $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
+    
+    while($subjects = mysql_fetch_assoc($subject)) {
+      echo print_r($subjects);
+    }
+
+    $num_rows = count($subjects);
+    //echo $num_rows;
+  }
+
+  if(isset($_POST['term'])) {
+    $temp['term'] = $_POST['term'];
+  }
+
+  if(isset($_POST['year'])) {
+    $temp['year'] = $_POST['year'];
+  }
+
 ?>
 
 <html lang="en">
@@ -63,76 +102,84 @@
             <li><a href="#">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
+
         <div class="col-sm-10">
+          <!-- block head in manage-exam -->
           <blockquote>
-            <h3>จัดตารางสอบ</h3><hr/>
-            <footer>ข้อมูลรายวิชาที่จัดสอบสอบ</footer>
+
+            <form name="autoExam" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+              <h3 class="text-center">จัดห้องสอบอัตโนมัติ</h3>
+              <div class="input-group area-padding">
+                <span class="input-group-addon" id="term-select">ภาคเรียนที่</span>
+                <input name="term" type="number" class="form-control" aria-describedby="term-select" min="0" 
+                  value="<?php echo (isset($temp['term'])) ? $temp['term'] : ''; ?>" />
+              </div>
+              
+              <div class="input-group area-padding">
+                <span class="input-group-addon" id="year-select">ปีการศึกษา</span>
+                <input name="year" type="number" class="form-control" aria-describedby="year-select" min="2500"
+                  value="<?php echo (isset($temp['year'])) ? $temp['year'] : ''; ?>" /> 
+              </div>
+
+              <div class="area-padding text-center">
+                <input name="btnSubmit" type="submit" class="btn btn-primary area-padding" value="เริ่มจัดอัตโนมัติ">
+              </div>
+            </form>
+
+              <hr/>
           </blockquote>
-          <div class="container-fluid">
-          
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>วันที่</th>
-                  <th>เวลา</th>
-                  <th>รหัสวิชา</th>
-                  <th>ชื่อวิชา</th>
-                  <th>ตอนที่</th>
-                </tr>
-              </thead>
 
-              <?php
-                while($subject = mysql_fetch_assoc($result)) {
-              ?>
+          <?php
+            if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
 
-              <tbody>
-                <tr>
-                  <td><?php echo $subject['day'] ?></td>
-                  <td><?php echo $subject['start_time'] . ' - ' . $subject['end_time'] ?></td>
-                  <td><?php echo $subject['subject_number'] ?></td>
-                  <td><?php echo $subject['name'] ?></td>
-                  <td><?php echo $subject['section'] ?></td>
-                </tr>
-              </tbody>
+              if($num_rows == 0) {
+          ?>
+                <div class="alert alert-danger text-center" role="alert">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">ผิดพลาด:</span>
+                  ไม่พบข้อมูลที่คุณต้องการ
+                </div>
+          <?php
+              }else {
+          ?>
 
-              <?php
-                }
-              ?>
+            <div class="container-fluid">
+            
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>วันที่</th>
+                    <th>เวลา</th>
+                    <th>รหัสวิชา</th>
+                    <th>ชื่อวิชา</th>
+                    <th>ตอนที่</th>
+                  </tr>
+                </thead>
 
-            </table>
+                <?php
+                  while($subjects = mysql_fetch_assoc($subject)) {
+                ?>
 
-            <div class="container-fluid text-center">
-              <button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-plus padding-right"></i>เพิ่ม</button>
-            </div>
-          </div><hr/>
-          <div class="container-fluid">
-            <table class="table table-bordered">
-              <thread>
-                <th>วันที่</th>
-                <th>เวลา</th>
-                <th>รหัสวิชา</th>
-                <th>ชื่อวิชา</th>
-                <th>ตอนที่</th>
-                <th>ตัวเลือก</th>
-              </thread>
-              <tr>
-                <td>12/09/59</td>
-                <td>12.09 น.</td>
-                <td>5002923</td>
-                <td>Thai study</td>
-                <td>4</td>
-                <td><i class="glyphicon glyphicon-pencil padding-right icon-color-edit"></i>| <i class="glyphicon glyphicon-remove icon-color-delete"></i></td>
-              </tr>
-              <tr>
-                <td>12/09/59</td>
-                <td>12.09 น.</td>
-                <td>5002923</td>
-                <td>Thai study</td>
-                <td>4</td>
-                <td><i class="glyphicon glyphicon-pencil padding-right icon-color-edit"></i>| <i class="glyphicon glyphicon-remove icon-color-delete"></i></td>
-              </tr>
-            </table>
-          </div>
+                <tbody>
+                  <tr>
+                    <td><?php echo $subjects['day'] ?></td>
+                    <td><?php echo $subjects['start_time'] . ' - ' . $subjects['end_time'] ?></td>
+                    <td><?php echo $subjects['subject_number'] ?></td>
+                    <td><?php echo $subjects['name'] ?></td>
+                    <td><?php echo $subjects['section'] ?></td>
+                  </tr>
+                </tbody>
+
+                <?php
+                  }
+                ?>
+
+              </table>
+
+            </div><hr/>
+
+          <?php } /* end else if */ } /* end if */ ?>
+
         </div>
       </div>
     </div>

@@ -30,3 +30,11 @@
   float: left;
   border-bottom-width: 0;
 }
+
+.text-center {
+  text-align: center;
+}
+
+.area-padding {
+  padding: 10px 5px 0px 5px;
+}
