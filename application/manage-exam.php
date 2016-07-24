@@ -69,18 +69,23 @@
             <footer>ข้อมูลรายวิชาที่จัดสอบสอบ</footer>
           </blockquote>
           <div class="container-fluid">
-            <table class="table table-striped">
-              <thread>
-                <th>วันที่</th>
-                <th>เวลา</th>
-                <th>รหัสวิชา</th>
-                <th>ชื่อวิชา</th>
-                <th>ตอนที่</th>
-              </thread>
+          
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>วันที่</th>
+                  <th>เวลา</th>
+                  <th>รหัสวิชา</th>
+                  <th>ชื่อวิชา</th>
+                  <th>ตอนที่</th>
+                </tr>
+              </thead>
 
               <?php
                 while($subject = mysql_fetch_assoc($result)) {
               ?>
+
+              <tbody>
                 <tr>
                   <td><?php echo $subject['day'] ?></td>
                   <td><?php echo $subject['start_time'] . ' - ' . $subject['end_time'] ?></td>
@@ -88,11 +93,14 @@
                   <td><?php echo $subject['name'] ?></td>
                   <td><?php echo $subject['section'] ?></td>
                 </tr>
+              </tbody>
+
               <?php
                 }
               ?>
 
             </table>
+
             <div class="container-fluid text-center">
               <button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-plus padding-right"></i>เพิ่ม</button>
             </div>
