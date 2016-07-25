@@ -4,9 +4,17 @@
   if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
     //main manage_exam concept.
     $i = 0;
+    $countSucc = 0;
+    $countFail = 0;
+    $dataRoom;
+    $goodChoice;
+    $success;
+    $fail;
+    $distance;
+    $realDistance = 0;
 
     //First, get department will take exam in term and year as you want.
-    $sqlGetDept = "SELECT std.department_code AS dept_code, dep.name AS dept_name, std.subject_number AS subject_code, std.section AS section FROM student AS std, department AS dep WHERE std.term = " . $_POST['term'] ." AND std.year = " . $_POST['year'] . " AND std.department_code = dep.code GROUP BY std.department_code";
+    $sqlGetDept = "SELECT std.department_code AS dept_code, dep.name AS dept_name, std.subject_number AS subject_number, std.section AS section FROM student AS std, department AS dep WHERE std.term = " . $_POST['term'] ." AND std.year = " . $_POST['year'] . " AND std.department_code = dep.code GROUP BY std.department_code";
     $dept = mysql_query($sqlGetDept) or die('Get department error.');
     $num_rows_dept = mysql_num_rows($dept);
 
@@ -20,15 +28,54 @@
         $dataStd[$i] = array($depts['dept_code'], $stds['dep_sum']);
         $i++;
       }
-    }    
+    }
 
     //Third, get subject have exam in term and year as you want.
     $sqlGetSubject = "SELECT * FROM subject WHERE term = " . $_POST['term'] . " AND year = " . $_POST['year'];
     $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
     
-    while($subjects = mysql_fetch_assoc($subject)) {
-      echo print_r($subjects);
+    $sqlGetRoom = "SELECT * FROM room";
+    $room = mysql_query($sqlGetRoom) or die('Get room error.');
+
+    while($rooms = mysql_fetch_assoc($room)) {
+      $dataRoom[$i] = $rooms;
+      $i++;
     }
+
+    //Forth, get student case student equal room and save in variable for use future.
+    for($i=0; $i<count($dataStd); $i++) {
+      for($j=0; $j<count($dataRoom); $j++) {
+
+        if($dataStd[$i][1] == $dataRoom[$j]['seat']) {
+          $success[$countSucc] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$i]['seat']);
+          $countSucc++;
+        }else {
+          $fail[$countFail] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$i]['seat']);
+          $countFail++;
+        }
+
+      } 
+    }
+
+    for($i=0; $i<count($fail); $i++) {                  //fail is department of student.
+      for($j=0; $j<count($fail); $j++) {                //fail is room.
+
+        if($j == 0) {
+          $distance[$j] = $fail[$j][3] - $fail[$i][1];
+          $realDistance[$i] = $distance[$j];
+        }else if($realDistance$[$i] < $distance[$j-1]) {
+          
+        }
+
+        if($realDistance < $distance) {
+          $realDistance = $distance;
+        }
+
+        if($fail[$i][])
+
+      }
+    }
+
 
     $num_rows = count($subjects);
     //echo $num_rows;
