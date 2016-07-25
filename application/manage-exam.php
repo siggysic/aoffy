@@ -4,14 +4,17 @@
   if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
     //main manage_exam concept.
     $i = 0;
+    $countRoom = 0;
     $countSucc = 0;
     $countFail = 0;
+    $countRealFail = 0;
     $dataRoom;
     $goodChoice;
     $success;
     $fail;
+    $realFail;
     $distance;
-    $realDistance = 0;
+    $countSig = 0;
 
     //First, get department will take exam in term and year as you want.
     $sqlGetDept = "SELECT std.department_code AS dept_code, dep.name AS dept_name, std.subject_number AS subject_number, std.section AS section FROM student AS std, department AS dep WHERE std.term = " . $_POST['term'] ." AND std.year = " . $_POST['year'] . " AND std.department_code = dep.code GROUP BY std.department_code";
@@ -38,46 +41,75 @@
     $room = mysql_query($sqlGetRoom) or die('Get room error.');
 
     while($rooms = mysql_fetch_assoc($room)) {
-      $dataRoom[$i] = $rooms;
-      $i++;
+      $dataRoom[$countRoom] = $rooms;
+      $countRoom++;
     }
 
+    if(isset($dataStd) && isset($dataRoom)) {
     //Forth, get student case student equal room and save in variable for use future.
-    for($i=0; $i<count($dataStd); $i++) {
-      for($j=0; $j<count($dataRoom); $j++) {
+      for($i=0; $i<count($dataStd); $i++) {
+        for($j=0; $j<count($dataRoom); $j++) {
+          if($dataStd[$i][1] == $dataRoom[$j]['seat']) {
+            $success[$countSucc] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$j]['seat'], $dataRoom[$j]['seat']-$dataStd[$i][1]);
+            $countSucc++;
+            $makeRoom = array_slice($dataRoom, $j);
+            $makeStd = array_slice($dataStd, $i);
+          }else {
+            $fail[$countFail] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$j]['seat'], $dataRoom[$j]['seat']-$dataStd[$i][1]);
+            $countFail++;
+          }
+        }
+      }
 
-        if($dataStd[$i][1] == $dataRoom[$j]['seat']) {
-          $success[$countSucc] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$i]['seat']);
-          $countSucc++;
+      if(isset($fail)) {
+        // for($i=0; $i<count($fail); $i++) {
+        //   for($j=0; $j<count($makeStd); $j++) {
+        //     if($makeStd[$j][0] == $fail[$i][0]) {
+
+        //     }
+        //   }
+        // }
+        if(isset($success)) {
+          for($i=0; $i<count($success); $i++) {
+            for($j=0; $j<count($fail); $j++) {
+              if($success[$i][0] != $fail[$j][0]) {
+                $realFail[$countRealFail] = $fail[$j];
+                $countRealFail++;
+              }
+            }
+            $real_auto['department'][$success[$i][0]] = $success[$i][0];
+            $real_auto['room_number'][$success[$i][0]] = $success[$i][2];
+            $real_auto['distance'][$success[$i][0]] = $success[$i][4];
+          }
         }else {
-          $fail[$countFail] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$i]['seat']);
-          $countFail++;
+          $realFail = $fail;
         }
 
-      } 
-    }
-
-    for($i=0; $i<count($fail); $i++) {                  //fail is department of student.
-      for($j=0; $j<count($fail); $j++) {                //fail is room.
-
-        if($j == 0) {
-          $distance[$j] = $fail[$j][3] - $fail[$i][1];
-          $realDistance[$i] = $distance[$j];
-        }else if($realDistance$[$i] < $distance[$j-1]) {
-          
+        if(isset($realFail)) {
+          for($i=0; $i<count($realFail); $i++) {
+            $auto_data[$i]['department'] = $realFail[$i][0];
+            $auto_data[$i]['room_number'] = $realFail[$i][2];
+            $auto_data[$i]['distance'] = $realFail[$i][4];
+            for($j=0; $j<count($dataStd); $j++) {
+              if($dataStd[$j][0] == $auto_data[$i]['department']) {
+                $real_auto['department'][$auto_data[$i]['department']] = $auto_data[$i]['department'];
+                if($auto_data[$i]['distance'] > 0) {
+                  if($i != 0) {
+                    if($auto_data[$i]['distance'] < $auto_data[$i-1]['distance'] || $auto_data[$i-1]['distance'] < 0) {
+                      $real_auto['distance'][$auto_data[$i]['department']] = $auto_data[$i]['distance'];
+                      $real_auto['room_number'][$auto_data[$i]['department']] = $auto_data[$i]['room_number'];
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
-
-        if($realDistance < $distance) {
-          $realDistance = $distance;
-        }
-
-        if($fail[$i][])
-
       }
     }
 
 
-    $num_rows = count($subjects);
+    $num_rows = count($subject);
     //echo $num_rows;
   }
 
@@ -191,7 +223,6 @@
           ?>
 
             <div class="container-fluid">
-            
               <table class="table table-hover">
                 <thead>
                   <tr>
@@ -200,6 +231,7 @@
                     <th>รหัสวิชา</th>
                     <th>ชื่อวิชา</th>
                     <th>ตอนที่</th>
+                    <th>ห้องสอบ</th>
                   </tr>
                 </thead>
 
@@ -214,13 +246,13 @@
                     <td><?php echo $subjects['subject_number'] ?></td>
                     <td><?php echo $subjects['name'] ?></td>
                     <td><?php echo $subjects['section'] ?></td>
+                    <td><?php echo $subjects['section'] ?></td>
                   </tr>
                 </tbody>
 
                 <?php
                   }
                 ?>
-
               </table>
 
             </div><hr/>
