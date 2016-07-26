@@ -34,7 +34,7 @@
     }
 
     //Third, get subject have exam in term and year as you want.
-    $sqlGetSubject = "SELECT * FROM subject WHERE term = " . $_POST['term'] . " AND year = " . $_POST['year'];
+    $sqlGetSubject = "SELECT * FROM subject WHERE term = " . $_POST['term'] . " AND year = " . $_POST['year'] . " ORDER BY day ASC";
     $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
     
     $sqlGetRoom = "SELECT * FROM room";
