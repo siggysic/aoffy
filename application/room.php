@@ -6,12 +6,25 @@ mysql_query('SET NAMES UTF8');
 $numberOrder = 1;
 $sql = '';
 $url = "http://" . $_SERVER['SERVER_NAME'];
+$data;
 
-$sql = "SELECT room_id, build, floor, room_number, seat FROM room";
-$room = mysql_query($sql) or die('Get room failed.');
+if(isset($_GET['id'])) {
+  $sql = "SELECT room_id, build, floor, room_number, seat FROM room WHERE room_id = " . $_GET['id'];
+  $result = mysql_query($sql);
 
-if(isset($_POST['btnSubmit'])) {
-  addRoom($_POST['building'], $_POST['floor'], $_POST['roomNumber'], $_POST['seat']);
+  while($roomsData = mysql_fetch_assoc($result)) {
+    $data = $roomsData;
+  }
+}
+
+
+if(isset($_POST['btnSubmit']) && isset($_POST['id'])) {
+  $id = $_POST['id'];
+  if(empty($id)) {
+    addRoom($_POST['building'], $_POST['floor'], $_POST['roomNumber'], $_POST['seat']);
+  }else if(!empty($id)) {
+    updateRoom($_POST['id'], $_POST['building'], $_POST['floor'], $_POST['roomNumber'], $_POST['seat']);
+  }
 }
 
 function addRoom($build, $floor, $number, $seat) {
@@ -19,6 +32,16 @@ function addRoom($build, $floor, $number, $seat) {
 
   mysql_query($sql) or die('Insert room failed.');
 }
+
+function updateRoom($id, $build, $floor, $number, $seat) {
+  $sql = "UPDATE room SET build = " . $build . " , floor = " . $floor . " , room_number = " . $number . " , seat = " . $seat
+        . " WHERE room_id = " . $id;
+
+  mysql_query($sql) or die('Update room failed.');
+}
+
+$sql = "SELECT room_id, build, floor, room_number, seat FROM room";
+$room = mysql_query($sql) or die('Get room failed.');
 
 ?>
 
@@ -86,9 +109,6 @@ function addRoom($build, $floor, $number, $seat) {
             <li><a href="#">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
-
-        <?php if(isset($_GET['id'])) { echo $_GET['id']; } ?>
-
         <!-- Start Content -->
 
         <div class="col-sm-10">
@@ -97,19 +117,21 @@ function addRoom($build, $floor, $number, $seat) {
 
             <form name="addRoom" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
               <h3 class="text-center">ข้อมูลห้องสอบ</h3>
+
+              <input name="id" type="hidden" value="<?php if(isset($data)) { echo $data['room_id']; } ?>" />
               
               <div class="row">
                 <div class="col-md-6">
                   <div class="input-group area-padding">
                     <span class="input-group-addon" id="building">ตึก</span>
                     <input name="building" type="number" class="form-control" aria-describedby="building" min="0" 
-                      max="100" value="" required="true" />
+                      max="100" value="<?php if(isset($data)) { echo $data['build']; } ?>" required="true" />
                   </div>
                 
                   <div class="input-group area-padding">
                     <span class="input-group-addon" id="floor">ชั้น</span>
                     <input name="floor" type="number" class="form-control" aria-describedby="floor" min="0"
-                      max="10" value="" required="true"/> 
+                      max="10" value="<?php if(isset($data)) { echo $data['floor']; } ?>" required="true"/> 
                   </div>
                 </div>
 
@@ -117,13 +139,13 @@ function addRoom($build, $floor, $number, $seat) {
                   <div class="input-group area-padding">
                     <span class="input-group-addon" id="room-number">รหัสห้องสอบ</span>
                     <input name="roomNumber" type="number" class="form-control" aria-describedby="room-number" min="0" 
-                      max="999" value="" required="true"/>
+                      max="999" value="<?php if(isset($data)) { echo $data['room_number']; } ?>" required="true"/>
                   </div>
                   
                   <div class="input-group area-padding">
                     <span class="input-group-addon" id="seat">จำนวนที่นั่งสอบ</span>
                     <input name="seat" type="number" class="form-control" aria-describedby="seat" min="0"
-                      max="999" value="" required="true"/> 
+                      max="999" value="<?php if(isset($data)) { echo $data['seat']; } ?>" required="true"/> 
                   </div>
                 </div>
               </div>
