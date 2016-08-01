@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 24, 2016 at 03:31 AM
+-- Generation Time: Aug 01, 2016 at 04:18 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 5.6.19
 
@@ -55,7 +55,7 @@ CREATE TABLE `room` (
   `build` varchar(5) DEFAULT NULL COMMENT 'ตึก',
   `seat` int(5) NOT NULL COMMENT 'จำนวนที่นั่งสอบ',
   `remain` int(5) NOT NULL COMMENT 'ที่นั่งเหลือ',
-  `status` set('ว่าง','เต็ม','ปิดใช้งาน') NOT NULL DEFAULT 'ว่าง' COMMENT 'สถานะ'
+  `status` set('ปกติ','ว่าง','เต็ม','ปิดใช้งาน') NOT NULL DEFAULT 'ปกติ' COMMENT 'สถานะ'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='รายละเอียดห้องสอบ';
 
 --
@@ -63,12 +63,15 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`room_id`, `room_number`, `floor`, `build`, `seat`, `remain`, `status`) VALUES
-(1, '304', NULL, NULL, 23, 23, 'ว่าง'),
-(2, '512', NULL, NULL, 25, 25, 'ว่าง'),
-(3, '301', NULL, NULL, 27, 27, 'ว่าง'),
-(4, '304', NULL, NULL, 30, 30, 'ว่าง'),
-(5, '612', NULL, NULL, 28, 28, 'ว่าง'),
-(6, '302', NULL, NULL, 26, 26, 'ว่าง');
+(1, '205', '2', '52', 26, 23, 'ว่าง'),
+(3, '301', '3', '52', 27, 27, 'ว่าง'),
+(4, '304', '3', '52', 30, 30, 'ว่าง'),
+(5, '612', '6', '52', 28, 28, 'ว่าง'),
+(6, '302', '3', '52', 26, 26, 'ว่าง'),
+(7, '404', '4', '52', 29, 0, 'ปกติ'),
+(19, '304', '3', '52', 25, 0, 'ปกติ'),
+(24, '203', '2', '52', 26, 0, 'ปกติ'),
+(25, '201', '2', '52', 29, 0, 'ปกติ');
 
 -- --------------------------------------------------------
 
@@ -305,7 +308,7 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `room`
 --
 ALTER TABLE `room`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสข้อมูลห้อง', AUTO_INCREMENT=7;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสข้อมูลห้อง', AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `student`
 --

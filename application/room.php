@@ -5,7 +5,7 @@ mysql_query('SET NAMES UTF8');
 
 $numberOrder = 1;
 $sql = '';
-$url = "http://" . $_SERVER['SERVER_NAME'];
+$url = "http://" . $_SERVER['SERVER_NAME'];         //get server name
 $data;
 
 if(isset($_GET['id'])) {
