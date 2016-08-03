@@ -2,15 +2,34 @@
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 
+  $term = '';
+  $year = '';
+
+  if(isset($_POST['term'])) {
+    $temp['term'] = $_POST['term'];
+  }
+
+  if(isset($_POST['year'])) {
+    $temp['year'] = $_POST['year'];
+  }
+
+  if(isset($_POST['term_depart'])) {
+    $temp['term'] = $_POST['term_depart'];
+  }
+
+  if(isset($_POST['year_depart'])) {
+    $temp['year'] = $_POST['year_depart'];
+  }
+
   if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
     //main manage_exam concept.
     $i = 0;
     $countSubject = 0;
-    $countRoom = 0;
+    // $countRoom = 0;
     $countSucc = 0;
     $countFail = 0;
     $countRealFail = 0;
-    $dataRoom;
+    // $dataRoom;
     $goodChoice;
     $success;
     $fail;
@@ -30,6 +49,15 @@
     $formatSec = '';
     $checkSub = '';
     $formatSection;
+    $forSend;
+    $stdCount = 1;
+    $stdDepart = '';
+    $formatStd;
+    $secCount = 1;
+    $setupDepart;
+    $setupCount = 1;
+    $department;
+    $cDepartment = 0;
 
     //First, get department will take exam in term and year as you want.
     // $sqlGetDept = "SELECT std.department_code AS dept_code, dep.name AS dept_name, std.subject_number AS subject_number, std.section AS section FROM student AS std, department AS dep WHERE std.term = " . $_POST['term'] ." AND std.year = " . $_POST['year'] . " AND std.department_code = dep.code GROUP BY std.department_code";
@@ -50,83 +78,57 @@
 
     //$sqlGetNumberStudent = "SELECT * FROM student WHERE term = " .$_POST['term'] . "AND year = " . $_POST['year'] . ""
 
+    $sqlGetAllDepart = "SELECT department.name, department.code FROM subject INNER JOIN student ON student.subject_number = subject.subject_number LEFT JOIN department ON student.department_code = department.code WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " GROUP BY department.code";
+    $queryAllDepart = mysql_query($sqlGetAllDepart) or die('Get department error.');
+
+    while ($queryAllDeparts = mysql_fetch_assoc($queryAllDepart)) {
+      $department[$cDepartment] = $queryAllDeparts;
+      $cDepartment++;
+    }
+
     //Third, get subject have exam in term and year as you want.
-    $sqlGetSubject = "SELECT * FROM subject INNER JOIN student ON student.subject_number = subject.subject_number WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
-    $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
+    // $sqlGetSubject = "SELECT subject.*, student.*, department.name AS department_name FROM subject INNER JOIN student ON student.subject_number = subject.subject_number LEFT JOIN department ON student.department_code = department.code WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
+    // $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
     
-    while($subjects = mysql_fetch_assoc($subject)) {
-      $dataSubject[$countSubject] = $subjects;
-      $countSubject++; 
-    }
+    // while($subjects = mysql_fetch_assoc($subject)) {
+    //   $dataSubject[$countSubject] = $subjects;
+    //   $countSubject++; 
+    // }
 
-    $sqlGetRoom = "SELECT * FROM room";
-    $room = mysql_query($sqlGetRoom) or die('Get room error.');
+    // $sqlGetRoom = "SELECT * FROM room";
+    // $room = mysql_query($sqlGetRoom) or die('Get room error.');
 
-    while($rooms = mysql_fetch_assoc($room)) {
-      $dataRoom[$countRoom] = $rooms;
-      $countRoom++;
-    }
-
-   // print_r($dataStd);exit();
-    // if(isset($dataStd) && isset($dataRoom)) { //Forth, get student case student equal room and save in variable for use future.
-    //   for($i=0; $i<count($dataStd); $i++) {
-    //     for($j=0; $j<count($dataRoom); $j++) {
-    //       if($dataStd[$i][1] == $dataRoom[$j]['seat']) {
-    //         $success[$countSucc] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$j]['seat'], $dataRoom[$j]['seat']-$dataStd[$i][1]);
-    //         $countSucc++;
-    //         $makeRoom = array_slice($dataRoom, $j);
-    //         $makeStd = array_slice($dataStd, $i);
-    //       }else {
-    //         $fail[$countFail] = array($dataStd[$i][0], $dataStd[$i][1], $dataRoom[$j]['room_number'], $dataRoom[$j]['seat'], $dataRoom[$j]['seat']-$dataStd[$i][1]);
-    //         $countFail++;
-    //       }
-    //     }
-    //   }
-
-    //   if(isset($fail)) {
-    //     if(isset($success)) {
-    //       for($i=0; $i<count($success); $i++) {
-    //         for($j=0; $j<count($fail); $j++) {
-    //           if($success[$i][0] != $fail[$j][0]) {
-    //             $realFail[$countRealFail] = $fail[$j];
-    //             $countRealFail++;
-    //           }
-    //         }
-    //         $real_auto['department'][$success[$i][0]] = $success[$i][0];
-    //         $real_auto['room_number'][$success[$i][0]] = $success[$i][2];
-    //         $real_auto['distance'][$success[$i][0]] = $success[$i][4];
-    //       }
-    //     }else {
-    //       $realFail = $fail;
-    //     }
-
-    //     if(isset($realFail)) {
-    //       for($i=0; $i<count($realFail); $i++) {
-    //         $auto_data[$i]['department'] = $realFail[$i][0];
-    //         $auto_data[$i]['room_number'] = $realFail[$i][2];
-    //         $auto_data[$i]['distance'] = $realFail[$i][4];
-    //         for($j=0; $j<count($dataStd); $j++) {
-    //           if($dataStd[$j][0] == $auto_data[$i]['department']) {
-    //             $real_auto['department'][$auto_data[$i]['department']] = $auto_data[$i]['department'];
-    //             if($auto_data[$i]['distance'] > 0) {
-    //               if($i != 0) {
-    //                 if($auto_data[$i]['distance'] < $auto_data[$i-1]['distance'] || $auto_data[$i-1]['distance'] < 0) {
-    //                   $real_auto['distance'][$auto_data[$i]['department']] = $auto_data[$i]['distance'];
-    //                   $real_auto['room_number'][$auto_data[$i]['department']] = $auto_data[$i]['room_number'];
-    //                 }
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
+    // while($rooms = mysql_fetch_assoc($room)) {
+    //   $dataRoom[$countRoom] = $rooms;
+    //   $countRoom++;
     // }
 
     if(isset($dataSubject)) {
+      // print_r($dataSubject);exit();
       for($i=0; $i<count($dataSubject); $i++) {
         $strNEnd = $dataSubject[$i]['start_time']. ' - ' .$dataSubject[$i]['end_time'];
         $subSec = $dataSubject[$i]['subject_number']. '-' .$dataSubject[$i]['section'];
+        if(empty($setupDepart[$dataSubject[$i]['department_code']])) {
+          $setupDepart[$dataSubject[$i]['department_code']] = $dataSubject[$i]['department_code'];
+          $setupCount = 1;
+        }else {
+          $setupCount++;
+          $formatStd[$dataSubject[$i]['department_code']]['people'] = $setupCount;
+        }
+        if(empty($stdDepart[$dataSubject[$i]['department_code']])) {
+          $stdDepart[$dataSubject[$i]['department_code']] = $dataSubject[$i]['department_code'];
+          $stdCount = 1;
+        }else {
+          $stdCount++;
+          $formatStd[$dataSubject[$i]['department_code']]['people'] = $stdCount;
+        }
+        if(empty($formatStd[$dataSubject[$i]['department_code']]['subject'])) {
+          $formatStd[$dataSubject[$i]['department_code']]['subjects'] = $dataSubject[$i]['subject_number'];
+          $secCount = 1;
+        }else {
+          $secCount++;
+          $formatStd[$dataSubject[$i]['department_code']]['subject_people'] = $secCount;
+        }
         if($dataSubject[$i]['day'] != $checkDay) {
           $checkDay = $dataSubject[$i]['day'];
           $countCol = 1;
@@ -150,34 +152,105 @@
         }
       }
     }
+    // print_r($formatStd);exit();
+    function roomDevide($people, $dataRoom) {
 
-    if(isset($formatSec) && isset($dataRoom)) {
-      foreach($formatSec as $key => $value) {
-        for($i=0; $i<count($dataRoom); $i++) {
-          if($formatSec[$key] == $dataRoom[$i]['remain'] && $dataRoom[$i]['status'] == 'ว่าง') {
-            $dataRoom[$i]['status'] = 'ไม่ว่าง';
-            $formatSection[$key]['room_number'] = $dataRoom[$i]['room_number'];
-          }else if(0 < $dataRoom[$i]['remain']-$formatSec[$key] && $dataRoom[$i]['remain']-$formatSec[$key] < 5 && $dataRoom[$i]['status'] == 'ว่าง') {
-            $dataRoom[$i]['remain'] = $dataRoom[$i]['remain']-$formatSec[$key];
-            $formatSection[$key]['room_number'] = $dataRoom[$i]['room_number'];
-          }else if(5 <= $dataRoom[$i]['remain']-$formatSec[$key] && $dataRoom[$i]['status'] == 'ว่าง') {
-            
+    }
+
+    function findFullRoom($people, $dataRoom) {
+      if(isset($dataRoom)) {
+        for($i=0; $i>count($dataRoom); $i++) {
+          if($dataRoom[$i]['status'] == 'ว่าง') {
+            if($people == $dataRoom[$i]['seat']) {
+              return $dataRoom[$i];
+            }
           }
         }
       }
     }
-    print_r($dataRoom);exit();
 
-    $num_rows = count($subject);
+    function findRoom($people, $dataRoom) {
+      $cFunction = 0;
+      if(isset($dataRoom) && 0 < $people) {
+        for($i=0; $i<count($dataRoom); $i++) {
+          if($dataRoom[$i]['status'] == 'ว่าง') {
+            $distance[$i] = $dataRoom[$i]['seat'] - $people;
+            if($distance[$i] > 0) {
+              if(empty($value)) {
+                $value = $distance[$i];
+                $dataRoom[$i]['key'] = $i;
+                $dataRoom[$i]['distance'] = $distance[$i];
+                $GLOBALS['forSend'] = $dataRoom[$i];
+              }
+              if(!empty($value)) {
+                if($value > $distance[$i]) {
+                  $value = $distance[$i];
+                  $dataRoom[$i]['key'] = $i;
+                  $dataRoom[$i]['distance'] = $distance[$i];
+                  $GLOBALS['forSend'] = $dataRoom[$i];
+                }
+              }
+            }
+          }
+          if($cFunction == count($dataRoom)-1) {
+            if(empty($value)) {
+              return;
+            }else {
+              return $GLOBALS['forSend'];
+            }
+          }
+          $cFunction = $cFunction+1;
+        }
+      }
+    }
+
+
+
+    if(isset($formatSec) && isset($dataRoom)) {
+      foreach ($formatSec as $key => $value) {
+        $checkFullRoom = findFullRoom($formatSec[$key], $dataRoom);
+        if($checkFullRoom) {
+
+        }else if(!$checkFullRoom) {
+          $checkRoom = findRoom($formatSec[$key], $dataRoom);
+          if(!empty($checkRoom)) {
+            $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
+            $formatSection[$key]['student'] = $formatSec[$key];
+            $formatSection[$key]['room_number'] = $checkRoom['room_number'];
+            $formatSection[$key]['room_id'] = $checkRoom['room_id'];
+          }else {
+            $checkRoom2 = roomDevide($formatSec[$key], $dataRoom);
+          }
+        }
+      }
+    }
+
+    // $num_rows = count($subject);
     //echo $num_rows;
   }
 
-  if(isset($_POST['term'])) {
-    $temp['term'] = $_POST['term'];
-  }
+  if(isset($_POST['confirmExam'])) {
+    print_r("expression");exit();
+    $dataSubject;
+    $dataRoom;
+    $countSubject = 0;
+    $countRoom = 0;
 
-  if(isset($_POST['year'])) {
-    $temp['year'] = $_POST['year'];
+    $sqlGetSubject = "SELECT subject.*, student.*, department.name AS department_name FROM subject INNER JOIN student ON student.subject_number = subject.subject_number LEFT JOIN department ON student.department_code = department.code WHERE subject.term = " . $temp['year'] . " AND subject.year = " . $temp['year'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
+    $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
+    
+    while($subjects = mysql_fetch_assoc($subject)) {
+      $dataSubject[$countSubject] = $subjects;
+      $countSubject++; 
+    }
+
+    $sqlGetRoom = "SELECT * FROM room";
+    $room = mysql_query($sqlGetRoom) or die('Get room error.');
+
+    while($rooms = mysql_fetch_assoc($room)) {
+      $dataRoom[$countRoom] = $rooms;
+      $countRoom++;
+    }
   }
 
 ?>
@@ -263,103 +336,36 @@
                 <input name="btnSubmit" type="submit" class="btn btn-primary area-padding" value="เริ่มจัดอัตโนมัติ">
               </div>
             </form>
-
               <hr/>
           </blockquote>
 
           <?php
             if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
-
-              if($num_rows == 0) {
+              if(!empty($department)) {
           ?>
-                <div class="alert alert-danger text-center" role="alert">
-                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                  <span class="sr-only">ผิดพลาด:</span>
-                  ไม่พบข้อมูลที่คุณต้องการ
-                </div>
-          <?php
-              }else {
-          ?>
-
-            <div class="container-fluid">
-              <table class="table table-hover" border="1">
-                <thead>
-                  <tr>
-                    <th>วันที่</th>
-                    <th>เวลา</th>
-                    <th>รหัสวิชา</th>
-                    <th>ชื่อวิชา</th>
-                    <th>ตอนที่</th>
-                    <th>ห้องสอบ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                    for($i=0; $i<count($dataSubject); $i++) {
-                  ?>
-                    <tr>
-                        <?php if($dataSubject[$i]['day'] != $checkRealDay) { ?>
-                          <td rowspan="<?php echo $formatCol[$dataSubject[$i]['day']]; ?>">
-                            <?php
-                              $checkRealDay = $dataSubject[$i]['day'];
-                              echo $dataSubject[$i]['day'];
-                            ?>
-                          </td>
-                        <?php } ?>
-                        <?php $strEnd = $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time'];
-                          if($strEnd != $checkRealTime) {
-                        ?>
-                          <td rowspan="<?php echo $formatTime[$dataSubject[$i]['day']][$strEnd]; ?>">
-                            <?php
-                              $checkRealTime = $strEnd;
-                              echo $strEnd;
-                            ?>
-                          </td>
-                        <?php } ?>
-                        <?php $subSection = $dataSubject[$i]['subject_number']. '-' .$dataSubject[$i]['section'];
-                          if($checkSec != $subSection) {
-                        ?>
-                            <td>
-                              <?php
-                                $checkSec = $subSection;
-                                echo $dataSubject[$i]['subject_number'];  
-                              ?>
-                            </td>
-                            <td>
-                              <?php
-                                echo $dataSubject[$i]['name'];
-                              ?>
-                            </td>
-                            <td>
-                              <?php
-                                echo $dataSubject[$i]['section'];
-                              ?>
-                            </td>
-                            <td>
-                              <?php
-                                echo $dataSubject[$i]['section'];
-                              ?>
-                            </td>
-                          <?php } ?>
-                      </tr>
-                      <!-- <tr>
-                        <td><?php echo $dataSubject[$i]['day']; ?></td>
-                        <td><?php echo $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time']; ?></td>
-                        <td><?php echo $dataSubject[$i]['subject_number']; ?></td>
-                        <td><?php echo $dataSubject[$i]['name']; ?></td>
-                        <td><?php echo $dataSubject[$i]['section']; ?></td>
-                        <td><?php echo $dataSubject[$i]['section']; ?></td>
-                      </tr> -->
-                  <?php
-                    }
-                  ?>
-                </tbody>
-              </table>
-
-            </div><hr/>
-
-          <?php } /* end else if */ } /* end if */ ?>
-
+                <select id="selectDepartment" class="form-control" style="width:30%; display:inline-block;">
+                  <?php for($i=0; $i<count($department); $i++) { ?>
+                    <option value="<?php echo $department[$i]['code']; ?>"><?php echo $department[$i]['name']; ?></option>
+                  <?php } ?>
+                </select>
+                <input type="hidden" id="year_depart" name="year_depart" value="<?php echo $temp['year']; ?>">
+                <input type="hidden" id="term_depart" name="term_depart" value="<?php echo $temp['term']; ?>">
+                <input type="submit" name="confirmExam" class="btn btn-success" value="ยืนยัน" onclick="callExamPlan()">
+            <?php }else { ?>
+              <div class="alert alert-danger text-center" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">ผิดพลาด:</span>
+                ไม่พบข้อมูลที่คุณต้องการ
+              </div>
+            <?php } ?>
+          <?php } ?>
+          <?php if(isset($_POST['confirmExam'])) { ?>
+            <select class="form-control" style="width:30%; display:inline-block;">
+              <?php for($i=0; $i<count($department); $i++) { ?>
+                <option><?php echo $department[$i]['name']; ?></option>
+              <?php } ?>
+            </select>
+          <?php } ?>
         </div>
       </div>
     </div>
@@ -369,6 +375,14 @@
         <h5 class="text-center">คณะครุฑศาสตร์อุตสาหกรรม มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</h5>
       </div>
     </nav>
+
+    <script>
+      function callExamPlan() {
+        var selectedValue = document.getElementById('selectDepartment');
+        var codeDepartment = selectedValue.options[selectedValue.selectedIndex].value;
+        alert(codeDepartment);
+      }
+    </script>
 
   </body>
 
