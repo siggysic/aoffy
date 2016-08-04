@@ -1,6 +1,6 @@
 <?php
   session_start();
-  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy//application/login.php'); }
+  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/login.php'); }
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 
@@ -363,7 +363,7 @@
               <li><a href="../application/subject.php"><i class="glyphicon glyphicon-home padding-right"></i>หน้าหลัก</a></li>
               <li><a href="../application/subject.php"><i class="glyphicon glyphicon-th-list padding-right"></i>จัดตารางสอบ</a></li>
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
-              <li><a href="#">เปลี่ยนรหัสผ่าน</a></li>
+              <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
               <li><a href="../application/login.php">ออกจากระบบ</a></li>
             </ul>
