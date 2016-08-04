@@ -2,6 +2,9 @@
 
 require('connect.php');
 session_start();
+
+if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/main-page.php'); }
+
 mysql_query('SET NAMES UTF8');
 
 $numberOrder = 1;
@@ -62,10 +65,6 @@ $room = mysql_query($sql) or die('Get room failed.');
 
   </head>
 
-  <?php
-    if(isset($_SESSION["username"])) {
-  ?>
-
   <body>
     <div class="row backgroud-green">
       <div class="container" >
@@ -97,7 +96,7 @@ $room = mysql_query($sql) or die('Get room failed.');
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
-              <li><a href="../application/login.php">ออกจากระบบ</a></li>
+              <li><a href="../application/logout.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -215,11 +214,5 @@ $room = mysql_query($sql) or die('Get room failed.');
     </nav>
 
   </body>
-
-  <?php 
-    }else {
-      header("LOCATION: " . $url . '/aoffy//application/login.php');
-    } 
-  ?>
 
 </html>

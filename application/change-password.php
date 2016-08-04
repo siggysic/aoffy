@@ -1,6 +1,6 @@
 <?php
   session_start();
-  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/login.php'); }
+  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/main-page.php'); }
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 

@@ -3,6 +3,8 @@
 require('connect.php');
 session_start();
 
+if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/main-page.php'); }
+
 mysql_query('SET NAMES UTF8');
 
 $numberOrder = 1;
@@ -32,10 +34,6 @@ if(isset($_POST['Import'])) {
     </style>
 
   </head>
-
-  <?php
-    if(isset($_SESSION["username"])) {
-  ?>
 
   <body>
     <div class="row backgroud-green">
@@ -68,7 +66,7 @@ if(isset($_POST['Import'])) {
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
-              <li><a href="../application/login.php">ออกจากระบบ</a></li>
+              <li><a href="../application/logout.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -197,11 +195,5 @@ if(isset($_POST['Import'])) {
     </nav>
 
   </body>
-
-  <?php 
-    }else {
-      header("LOCATION: " . $url . '/aoffy//application/login.php');
-    } 
-  ?>
 
 </html>

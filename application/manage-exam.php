@@ -1,6 +1,6 @@
 <?php
   session_start();
-  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/login.php'); }
+  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/main-page.php'); }
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 
@@ -142,7 +142,7 @@
     $sqlGetSubject = "SELECT subject.*, student.*, department.name AS department_name FROM subject INNER JOIN student ON student.subject_number = subject.subject_number LEFT JOIN department ON student.department_code = department.code WHERE subject.term = " . $temp['term'] . " AND subject.year = " . $temp['year'] . " AND student.department_code = " . "'" . $selected . "'" . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
     $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
 
-    while($subjects = mysql_fetch_assoc($subject)) {
+    while($subjects = mysql_fetch_assoc($subject)) {    
       $dataSubject[$countSubject] = $subjects;
       $countSubject++; 
     }
@@ -365,7 +365,7 @@
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
-              <li><a href="../application/login.php">ออกจากระบบ</a></li>
+              <li><a href="../application/logout.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->

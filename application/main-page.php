@@ -1,9 +1,43 @@
 <?php
+  require('connect.php');
   session_start();
-  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/login.php'); }
-  require_once 'connect.php';
-  mysql_query("SET NAMES UTF8");
 
+  mysql_query('SET NAMES UTF8');
+
+  $sql = '';
+  $loginFailed = false;
+  $url = "http://" . $_SERVER['SERVER_NAME'];         //get server name
+  $data;
+
+  if(isset($_POST['btnLogin'])) {
+    if(isset($_POST['username']) && isset($_POST['password'])) {
+      $user = $_POST['username'];
+      $pass = $_POST['password'];
+
+      if($user == "admin") {
+        $encrypt =  hash('sha512', $pass);
+
+        $sql = "SELECT username, COUNT(password) AS total FROM login WHERE password = '" . $encrypt . "' ";
+        $result = mysql_query($sql);
+
+        while($results = mysql_fetch_assoc($result)) {
+          $data = $results;
+        }
+
+        if($data['total'] == 1) {
+          $_SESSION["username"] = $data['username'];
+          session_write_close();
+          header("LOCATION: " . $url . '/aoffy/application/main-page.php');
+        }else {
+          $loginFailed = true;  
+        }
+
+      }else {
+        $loginFailed = true;
+      }
+
+    }
+  }
 ?>
 
 <html lang="en">
@@ -25,6 +59,7 @@
       </div>
     </div>
 
+    <!-- Start Menu -->
     <div class="row">
       <nav class="navbar navbar-default">
         <div class="container">
@@ -47,12 +82,42 @@
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
-              <li><a href="../application/login.php">ออกจากระบบ</a></li>
+              <?php 
+                if(isset($_SESSION['username'])) {
+              ?>
+                <li><a href="../application/logout.php">ออกจากระบบ</a></li>
+              <?php } ?>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
       </nav>
     </div>
+    <!-- End Menu -->
+
+    <!-- Start Login -->
+
+    <?php if(!isset($_SESSION['username'])) { ?>
+
+    <div class="row">
+      <div class="col-sm-6"></div>
+      <div class="col-sm-6 text-right padding-right-20">
+        <form name="loginForm" class="form-signin" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+          <input type="text" name="username" class="form-control" placeholder="Username" required>
+          <input type="password" name="password" class="form-control" placeholder="Password" required>
+          <input type="submit" name="btnLogin" class="btn btn-primary" value="เข้าสู่ระบบ">
+        </form>
+
+        <?php 
+          if($loginFailed) {
+        ?>
+          <span class="glyphicon glyphicon-remove-sign color-red"> ชื่อผู้ใช้งานหรือรหัสผ่านผิดพลาด</span>
+        <?php } ?>
+      </div>
+    </div>
+
+    <?php } ?>
+
+    <!-- End Login -->
     
     <div class="row">
       <div class="container">
