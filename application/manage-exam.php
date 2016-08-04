@@ -49,7 +49,6 @@
     $formatSec = '';
     $checkSub = '';
     $formatSection;
-    $forSend;
     $stdCount = 1;
     $stdDepart = '';
     $formatStd;
@@ -103,63 +102,134 @@
     //   $countRoom++;
     // }
 
+    // $num_rows = count($subject);
+    //echo $num_rows;
+  }
+
+  if(isset($_POST['confirmExam'])) {
+    $selected = $_POST['selectDepartment'];
+    $dataSubject;
+    $dataRoom;
+    $countSubject = 0;
+    $countRoom = 0;
+    $cDepartment = 0;
+    $forSend;
+    $cDate = 0;
+    $cSubject = 0;
+    $cTime = 0;
+    $cAllFormat = 0;
+    $chkDate = '';
+    $chkSubject = '';
+    $chkTime = '';
+    $chkDate2 = '';
+    $chkTimeSec2 = '';
+    $checkAllFormat = '';
+    $checkAllFormat2 = '';
+    $checkAllFormat3 = '';
+    $forSend;
+    $forSend2;
+
+    $sqlGetAllDepart = "SELECT department.name, department.code FROM subject INNER JOIN student ON student.subject_number = subject.subject_number LEFT JOIN department ON student.department_code = department.code WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " GROUP BY department.code";
+    $queryAllDepart = mysql_query($sqlGetAllDepart) or die('Get department error.');
+
+    while ($queryAllDeparts = mysql_fetch_assoc($queryAllDepart)) {
+      $department[$cDepartment] = $queryAllDeparts;
+      $cDepartment++;
+    }
+
+    $sqlGetSubject = "SELECT subject.*, student.*, department.name AS department_name FROM subject INNER JOIN student ON student.subject_number = subject.subject_number LEFT JOIN department ON student.department_code = department.code WHERE subject.term = " . $temp['term'] . " AND subject.year = " . $temp['year'] . " AND student.department_code = " . "'" . $selected . "'" . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
+    $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
+
+    while($subjects = mysql_fetch_assoc($subject)) {
+      $dataSubject[$countSubject] = $subjects;
+      $countSubject++; 
+    }
+
+    $sqlGetRoom = "SELECT * FROM room";
+    $room = mysql_query($sqlGetRoom) or die('Get room error.');
+
+    while($rooms = mysql_fetch_assoc($room)) {
+      $dataRoom[$countRoom] = $rooms;
+      $countRoom++;
+    }
+
     if(isset($dataSubject)) {
-      // print_r($dataSubject);exit();
       for($i=0; $i<count($dataSubject); $i++) {
-        $strNEnd = $dataSubject[$i]['start_time']. ' - ' .$dataSubject[$i]['end_time'];
-        $subSec = $dataSubject[$i]['subject_number']. '-' .$dataSubject[$i]['section'];
-        if(empty($setupDepart[$dataSubject[$i]['department_code']])) {
-          $setupDepart[$dataSubject[$i]['department_code']] = $dataSubject[$i]['department_code'];
-          $setupCount = 1;
-        }else {
-          $setupCount++;
-          $formatStd[$dataSubject[$i]['department_code']]['people'] = $setupCount;
+        $allFormat2 = $dataSubject[$i]['day'] . ' - ' . $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time'] . ' - ' . $dataSubject[$i]['subject_number'];
+        if($checkAllFormat2 != $allFormat2) {
+          $strend = $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time'] . ' - ' . $dataSubject[$i]['section'];
+          if($chkSubject != $dataSubject[$i]['subject_number']) {
+            $chkSubject = $dataSubject[$i]['subject_number'];
+            $cSubject = 1;
+          }else {
+            $cSubject++;
+            $format[$dataSubject[$i]['subject_number']] = $cSubject;
+          }
+
+          if($chkDate != $dataSubject[$i]['day']) {
+            $chkDate = $dataSubject[$i]['day'];
+            $cDate = 1;
+          }else {
+            $cDate++;
+            $format[$dataSubject[$i]['day']] = $cDate;
+          }
+
+          if($chkTime != $strend) {
+            $chkTime = $strend;
+            $cTime = 1;
+          }else {
+            $cTime++;
+            $format[$strend] = $cTime;
+          }
+
+          $checkAllFormat2 = $allFormat2;
         }
-        if(empty($stdDepart[$dataSubject[$i]['department_code']])) {
-          $stdDepart[$dataSubject[$i]['department_code']] = $dataSubject[$i]['department_code'];
-          $stdCount = 1;
+        if($checkAllFormat3 != $allFormat2) {
+          $checkAllFormat3 = $allFormat2;
+          $cAllFormat = 1;
         }else {
-          $stdCount++;
-          $formatStd[$dataSubject[$i]['department_code']]['people'] = $stdCount;
-        }
-        if(empty($formatStd[$dataSubject[$i]['department_code']]['subject'])) {
-          $formatStd[$dataSubject[$i]['department_code']]['subjects'] = $dataSubject[$i]['subject_number'];
-          $secCount = 1;
-        }else {
-          $secCount++;
-          $formatStd[$dataSubject[$i]['department_code']]['subject_people'] = $secCount;
-        }
-        if($dataSubject[$i]['day'] != $checkDay) {
-          $checkDay = $dataSubject[$i]['day'];
-          $countCol = 1;
-        }else {
-          $countCol++;
-          $formatCol[$dataSubject[$i]['day']] = $countCol;
-        }
-        if($strNEnd != $checkTime) {
-          $checkTime = $strNEnd;
-          $countTime = 1;
-        }else {
-          $countTime++;
-          $formatTime[$dataSubject[$i]['day']][$strNEnd] = $countTime;
-        }
-        if($subSec != $checkSub) {
-          $checkSub = $subSec;
-          $countSec = 1;
-        }else {
-          $countSec++;
-          $formatSec[$subSec] = $countSec;
+          $cAllFormat++;
+          $formatRoom[$allFormat2] = $cAllFormat;
         }
       }
     }
-    // print_r($formatStd);exit();
-    function roomDevide($people, $dataRoom) {
 
+    function roomDevide($people, $dataRoom) {
+      $cFunction = 0;
+      if(isset($people) && isset($dataRoom) && 0 < $people) {
+        for($i=0; $i<count($dataRoom); $i++) {
+          if($dataRoom[$i]['status'] == 'ว่าง') {
+            $distance[$i] = $dataRoom[$i]['seat'] - $people;
+            if(empty($value)) {
+              $value = $distance[$i];
+              $dataRoom[$i]['key'] = $i;
+              $dataRoom[$i]['distance'] = $distance[$i];
+              $GLOBALS['forSend'] = $dataRoom[$i];
+            }
+            if(!empty($value)) {
+              if($value > $distance[$i]) {
+                $value = $distance[$i];
+                $dataRoom[$i]['key'] = $i;
+                $dataRoom[$i]['distance'] = $distance[$i];
+                $GLOBALS['forSend'] = $dataRoom[$i];
+              }
+            }
+          }
+          if($cFunction == count($dataRoom)-1) {
+            if(empty($value)) {
+              return;
+            }else {
+              return $GLOBALS['forSend'];
+            }
+          }
+          $cFunction = $cFunction+1;
+        }
+      }
     }
 
     function findFullRoom($people, $dataRoom) {
-      if(isset($dataRoom)) {
-        for($i=0; $i>count($dataRoom); $i++) {
+      if(isset($people) && isset($dataRoom)) {
+        for($i=0; $i<count($dataRoom); $i++) {
           if($dataRoom[$i]['status'] == 'ว่าง') {
             if($people == $dataRoom[$i]['seat']) {
               return $dataRoom[$i];
@@ -171,7 +241,7 @@
 
     function findRoom($people, $dataRoom) {
       $cFunction = 0;
-      if(isset($dataRoom) && 0 < $people) {
+      if(isset($people) && isset($dataRoom) && 0 < $people) {
         for($i=0; $i<count($dataRoom); $i++) {
           if($dataRoom[$i]['status'] == 'ว่าง') {
             $distance[$i] = $dataRoom[$i]['seat'] - $people;
@@ -204,52 +274,36 @@
       }
     }
 
-
-
-    if(isset($formatSec) && isset($dataRoom)) {
-      foreach ($formatSec as $key => $value) {
-        $checkFullRoom = findFullRoom($formatSec[$key], $dataRoom);
+    if(isset($formatRoom) && isset($dataRoom)) {
+      foreach ($formatRoom as $key => $value) {
+        $checkFullRoom = findFullRoom($formatRoom[$key], $dataRoom);
         if($checkFullRoom) {
 
         }else if(!$checkFullRoom) {
-          $checkRoom = findRoom($formatSec[$key], $dataRoom);
-          if(!empty($checkRoom)) {
+          $checkRoom = findRoom($formatRoom[$key], $dataRoom);
+          if($checkRoom['distance'] > 0) {
             $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
-            $formatSection[$key]['student'] = $formatSec[$key];
-            $formatSection[$key]['room_number'] = $checkRoom['room_number'];
-            $formatSection[$key]['room_id'] = $checkRoom['room_id'];
-          }else {
-            $checkRoom2 = roomDevide($formatSec[$key], $dataRoom);
+            $formatSection[$key][0]['student'] = $formatRoom[$key];
+            $formatSection[$key][0]['room_number'] = $checkRoom['room_number'];
+            $formatSection[$key][0]['room_id'] = $checkRoom['room_id'];
+          }else if(empty($checkRoom)) {
+            $cCount = 0;
+            $checkRoom = roomDevide($formatRoom[$key], $dataRoom);
+            $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
+            $formatSection[$key][$cCount]['student'] = $formatRoom[$key];
+            $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
+            $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
+            while ($checkRoom['distance'] < 0) {
+              $cCount++;
+              $checkRoom = roomDevide(-$checkRoom['distance'], $dataRoom);
+              $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
+              $formatSection[$key][$cCount]['student'] = $formatRoom[$key];
+              $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
+              $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
+            }
           }
         }
       }
-    }
-
-    // $num_rows = count($subject);
-    //echo $num_rows;
-  }
-
-  if(isset($_POST['confirmExam'])) {
-    print_r("expression");exit();
-    $dataSubject;
-    $dataRoom;
-    $countSubject = 0;
-    $countRoom = 0;
-
-    $sqlGetSubject = "SELECT subject.*, student.*, department.name AS department_name FROM subject INNER JOIN student ON student.subject_number = subject.subject_number LEFT JOIN department ON student.department_code = department.code WHERE subject.term = " . $temp['year'] . " AND subject.year = " . $temp['year'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
-    $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
-    
-    while($subjects = mysql_fetch_assoc($subject)) {
-      $dataSubject[$countSubject] = $subjects;
-      $countSubject++; 
-    }
-
-    $sqlGetRoom = "SELECT * FROM room";
-    $room = mysql_query($sqlGetRoom) or die('Get room error.');
-
-    while($rooms = mysql_fetch_assoc($room)) {
-      $dataRoom[$countRoom] = $rooms;
-      $countRoom++;
     }
   }
 
@@ -335,7 +389,7 @@
               <div class="area-padding text-center">
                 <input name="btnSubmit" type="submit" class="btn btn-primary area-padding" value="เริ่มจัดอัตโนมัติ">
               </div>
-            </form>
+            
               <hr/>
           </blockquote>
 
@@ -343,14 +397,14 @@
             if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
               if(!empty($department)) {
           ?>
-                <select id="selectDepartment" class="form-control" style="width:30%; display:inline-block;">
+                <select id="selectDepartment" name="selectDepartment" class="form-control" style="width:30%; display:inline-block;">
                   <?php for($i=0; $i<count($department); $i++) { ?>
                     <option value="<?php echo $department[$i]['code']; ?>"><?php echo $department[$i]['name']; ?></option>
                   <?php } ?>
                 </select>
                 <input type="hidden" id="year_depart" name="year_depart" value="<?php echo $temp['year']; ?>">
                 <input type="hidden" id="term_depart" name="term_depart" value="<?php echo $temp['term']; ?>">
-                <input type="submit" name="confirmExam" class="btn btn-success" value="ยืนยัน" onclick="callExamPlan()">
+                <input type="submit" name="confirmExam" class="btn btn-success" value="ยืนยัน">
             <?php }else { ?>
               <div class="alert alert-danger text-center" role="alert">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -360,12 +414,66 @@
             <?php } ?>
           <?php } ?>
           <?php if(isset($_POST['confirmExam'])) { ?>
-            <select class="form-control" style="width:30%; display:inline-block;">
+            <select name="selectDepartment" class="form-control" style="width:30%; display:inline-block;">
               <?php for($i=0; $i<count($department); $i++) { ?>
-                <option><?php echo $department[$i]['name']; ?></option>
+                <option value="<?php echo $department[$i]['code']; ?>" <?php if($selected == $department[$i]['code']) { echo 'selected'; } ?>><?php echo $department[$i]['name']; ?></option>
               <?php } ?>
             </select>
+            <input type="submit" name="confirmExam" class="btn btn-success" value="ยืนยัน"><br>
+            <table class="table table-hover">
+              <thead>
+                <th>วันที่</th>
+                <th>เวลา</th>
+                <th>รหัสวิชา</th>
+                <th>ชื่อวิชา</th>
+                <th>ตอนที่</th>
+                <th>ห้องสอบ</th>
+              </thead>
+              <?php for($i=0; $i<count($dataSubject); $i++) { ?>  
+                <?php $allFormat = $dataSubject[$i]['day'] . ' - ' . $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time'] . ' - ' . $dataSubject[$i]['subject_number'];
+                  $timeSec = $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time'] . ' - ' . $dataSubject[$i]['section'];
+                  if($allFormat != $checkAllFormat) {
+                ?>
+                  <tr>
+                    <?php if($chkDate2 != $dataSubject[$i]['day']) { ?>
+                      <td rowspan="<?php if(isset($format[$dataSubject[$i]['day']])) { echo $format[$dataSubject[$i]['day']]; } ?>">
+                        <?php echo $dataSubject[$i]['day']; ?>
+                      </td>
+                    <?php $chkDate2 = $dataSubject[$i]['day']; } ?>
+                    <?php if($chkTimeSec2 != $timeSec) { ?>
+                      <td rowspan="<?php if(isset($format[$timeSec])) { echo $format[$timeSec]; } ?>">
+                        <?php echo $dataSubject[$i]['start_time']. ' - ' . $dataSubject[$i]['end_time']; ?>
+                      </td>
+                    <?php } ?>
+                    <td><?php echo $dataSubject[$i]['subject_number']; ?></td>
+                    <td><?php echo $dataSubject[$i]['name']; ?></td>
+                    <td><?php echo $dataSubject[$i]['section']; ?></td>
+                    <?php if(isset($formatSection[$allFormat])) { ?>
+                      <td>
+                        <?php 
+                          if(count($formatSection[$allFormat]) > 1) {
+                            for($i=0; $i<count($formatSection[$allFormat]); $i++) {
+                              if($i == 0) {
+                                $setUp = $formatSection[$allFormat][$i]['room_number'];
+                              }else {
+                                $setUp = $setUp . ", " . $formatSection[$allFormat][$i]['room_number'];
+                              }
+                            }
+                          }else {
+                            $setUp = $formatSection[$allFormat][0]['room_number'];
+                          }
+                          echo $setUp;
+                        ?>
+                      </td>
+                    <?php }else { ?>
+                      <td>ไม่สามารถจัดห้องได้</td>
+                    <?php } ?>
+                  </tr>
+                <?php $checkAllFormat = $allFormat; } ?>
+              <?php } ?>
+            </table>
           <?php } ?>
+          </form>
         </div>
       </div>
     </div>
