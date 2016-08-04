@@ -1,6 +1,10 @@
 .padding-right {
   padding-right: 5px;
 }
+.padding {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 .img-logo {
   margin-top: 10px;
 }
@@ -164,4 +168,9 @@
 
 .top-5 {
   margin-top: 20px;
+}
+
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+  width: 70%;
+  margin: auto;
 }

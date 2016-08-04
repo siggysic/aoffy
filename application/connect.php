@@ -2,7 +2,7 @@
 
   $host = 'localhost';
   $user = 'root';
-  $pass = 'admin';
+  $pass = '';
   $db = 'manage_exam';
 
   mysql_connect($host, $user, $pass) or die('Connect Failed.');
