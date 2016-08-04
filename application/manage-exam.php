@@ -288,6 +288,7 @@
             $formatSection[$key][0]['student'] = $formatRoom[$key];
             $formatSection[$key][0]['room_number'] = $checkRoom['room_number'];
             $formatSection[$key][0]['room_id'] = $checkRoom['room_id'];
+            $formatSection[$key][0]['distance'] = $formatSection[$key][0]['student'];
           }else if(empty($checkRoom)) {
             $cCount = 0;
             $checkRoom = roomDevide($formatRoom[$key], $dataRoom);
@@ -295,6 +296,12 @@
             $formatSection[$key][$cCount]['student'] = $formatRoom[$key];
             $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
             $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
+            $formatSection[$key][$cCount]['distance'] = $checkRoom['distance'];
+            if($formatSection[$key][$cCount]['distance'] < 0) {
+              $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'] + $formatSection[$key][$cCount]['distance'];
+            }else {
+              $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'];
+            }
             while ($checkRoom['distance'] < 0) {
               $cCount++;
               $checkRoom = roomDevide(-$checkRoom['distance'], $dataRoom);
@@ -302,6 +309,12 @@
               $formatSection[$key][$cCount]['student'] = $formatRoom[$key];
               $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
               $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
+              $formatSection[$key][$cCount]['distance'] = $checkRoom['distance'];
+              if($formatSection[$key][$cCount]['distance'] < 0) {
+                $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'] + $formatSection[$key][$cCount]['distance'];
+              }else {
+                $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'] - $formatSection[$key][$cCount-1]['distance'];
+              }
             }
           }
         }
@@ -457,13 +470,13 @@
                           if(count($formatSection[$allFormat]) > 1) {
                             for($i=0; $i<count($formatSection[$allFormat]); $i++) {
                               if($i == 0) {
-                                $setUp = $formatSection[$allFormat][$i]['room_number'];
+                                $setUp = $formatSection[$allFormat][$i]['room_number'] . ' (' . $formatSection[$allFormat][$i]['distance'] . ')';
                               }else {
-                                $setUp = $setUp . ", " . $formatSection[$allFormat][$i]['room_number'];
+                                $setUp = $setUp . ", " . $formatSection[$allFormat][$i]['room_number'] . " (" . $formatSection[$allFormat][$i]['distance'] . ")";
                               }
                             }
                           }else {
-                            $setUp = $formatSection[$allFormat][0]['room_number'];
+                            $setUp = $formatSection[$allFormat][0]['room_number'] . " (" . $formatSection[$allFormat][0]['distance'] . ")";
                           }
                           echo $setUp;
                         ?>

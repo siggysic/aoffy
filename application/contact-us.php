@@ -64,13 +64,15 @@
               <div class="panel-body">
                 <div class="row">
                   <div class="container-fluid text-center">
-                    <img src="img/kmutnb.png" width="200px" height="200px">
+                    <img src="img/contact.jpg" width="200px" height="200px">
                   </div>
                 </div><br>
                 <div class="row">
                   <div class="container-fluid text-center">
-                    <h4><strong>ชื่อ : </strong>เพรชกำแพงยิง มุ้งมิ้งมากมาย</h4>
-                    <h4><strong>Email : </strong>Petchgumpangying@gmail.com</h4>
+                    <h4><strong>ชื่อ : </strong>นางปะนะรี ปัญญาชีวิตา</h4>
+                    <h4><strong>ตำแหน่ง : </strong>นักวิชาการศึกษา</h4>
+                    <h4><strong>โทรศัพท์ : </strong>0-2555-2000 ต่อ 3226</h4>
+                    <h4><strong>Email : </strong>panaree.p@fte.kmutnb.ac.th</h4>
                   </div>
                 </div>
               </div>
