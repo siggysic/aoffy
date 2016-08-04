@@ -1,4 +1,5 @@
 <?php
+  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy//application/login.php'); }
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 
@@ -320,7 +321,7 @@
   </head>
 
   <body>
-    <div class="row">
+    <div class="row backgroud-green">
       <div class="container">
         <!-- <img src="img/kmutnb.png" class="img-responsive img-logo"> -->
         <h3 class="text-center">ระบบจัดการตารางสอบ</h3>
@@ -339,17 +340,18 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Brand</a>
+            <a class="navbar-brand" href="#">KMUTNB</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="../application/manage-exam.php"><i class="glyphicon glyphicon-home padding-right"></i>หน้าหลัก</a></li>
+              <li class="active"><a href="../application/subject.php"><i class="glyphicon glyphicon-home padding-right"></i>หน้าหลัก</a></li>
               <li><a href="../application/manage-exam.php"><i class="glyphicon glyphicon-th-list padding-right"></i>จัดตารางสอบ</a></li>
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="#">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
+              <li><a href="../application/login.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -361,10 +363,10 @@
         <div class="col-sm-2">
           <a href="#sidebar" data-toggle="collapse"><i class="glyphicon glyphicon-align-justify"></i></a>
           <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse">
-            <li><a href="#">ข้อมูลวิชาสอบ</a></li>
-            <li><a href="#">ข้อมูลห้องสอบ</a></li>
-            <li><a href="#">ข้อมูลผู้สอบ</a></li>
-            <li><a href="#">จัดห้องสอบอัตโนมัติ</a></li>
+            <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
+            <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
+            <li><a href="../application/subject.php">ข้อมูลผู้สอบ</a></li>
+            <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
 

@@ -86,13 +86,13 @@ $room = mysql_query($sql) or die('Get room failed.');
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Brand</a>
+            <a class="navbar-brand" href="#">KMUTNB</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="../application/manage-exam.php"><i class="glyphicon glyphicon-home padding-right"></i>หน้าหลัก</a></li>
+              <li class="active"><a href="../application/subject.php"><i class="glyphicon glyphicon-home padding-right"></i>หน้าหลัก</a></li>
               <li><a href="../application/manage-exam.php"><i class="glyphicon glyphicon-th-list padding-right"></i>จัดตารางสอบ</a></li>
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="#">เปลี่ยนรหัสผ่าน</a></li>
@@ -109,10 +109,10 @@ $room = mysql_query($sql) or die('Get room failed.');
         <div class="col-sm-2">
           <a href="#sidebar" data-toggle="collapse"><i class="glyphicon glyphicon-align-justify"></i></a>
           <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse">
-            <li><a href="#">ข้อมูลวิชาสอบ</a></li>
+            <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
             <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
-            <li><a href="#">ข้อมูลผู้สอบ</a></li>
-            <li><a href="#">จัดห้องสอบอัตโนมัติ</a></li>
+            <li><a href="../application/subject.php">ข้อมูลผู้สอบ</a></li>
+            <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
         <!-- Start Content -->

@@ -31,7 +31,7 @@
         if($data['total'] == 1) {
           $_SESSION["username"] = $data['username'];
           session_write_close();
-          header("LOCATION: " . $url . '/aoffy//application/room.php');
+          header("LOCATION: " . $url . '/aoffy/application/subject.php');
         }else {
           $loginFailed = true;  
         }
