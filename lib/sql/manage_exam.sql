@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 01, 2016 at 04:18 AM
+-- Generation Time: Aug 04, 2016 at 05:18 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 5.6.19
 
@@ -41,6 +41,25 @@ INSERT INTO `department` (`department_id`, `code`, `name`) VALUES
 (3, 'TM', 'วิศวกรรมเครื่องกล'),
 (4, 'TT', 'วิศวกรรมแมคคาทรอนิกส์ '),
 (5, 'TP', 'วิศวกรรมการผลิตและอุตสาหการ');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login`
+--
+
+CREATE TABLE `login` (
+  `login_id` int(11) NOT NULL COMMENT 'รหัสของชื่อผู้ใช้',
+  `username` varchar(50) NOT NULL COMMENT 'ชื่อผู้ใช้',
+  `password` varchar(255) NOT NULL COMMENT 'รหัสผ่าน'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `login`
+--
+
+INSERT INTO `login` (`login_id`, `username`, `password`) VALUES
+(1, 'admin', '887375DAEC62A9F02D32A63C9E14C7641A9A8A42E4FA8F6590EB928D9744B57BB5057A1D227E4D40EF911AC030590BBCE2BFDB78103FF0B79094CEE8425601F5');
 
 -- --------------------------------------------------------
 
@@ -267,6 +286,18 @@ INSERT INTO `subject` (`subject_id`, `subject_number`, `name`, `start_time`, `en
 (75, '020113910', 'Mechanics of Solids', '13:00:00', '16:00:00', '2015-12-14', 2, 1, 2558, NULL),
 (76, '020133141', 'Sensors and Control Element', '13:00:00', '16:00:00', '2015-12-14', 1, 1, 2558, NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `test`
+--
+
+CREATE TABLE `test` (
+  `id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `price` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Indexes for dumped tables
 --
@@ -276,6 +307,12 @@ INSERT INTO `subject` (`subject_id`, `subject_number`, `name`, `start_time`, `en
 --
 ALTER TABLE `department`
   ADD PRIMARY KEY (`department_id`);
+
+--
+-- Indexes for table `login`
+--
+ALTER TABLE `login`
+  ADD PRIMARY KEY (`login_id`);
 
 --
 -- Indexes for table `room`
@@ -296,6 +333,12 @@ ALTER TABLE `subject`
   ADD PRIMARY KEY (`subject_id`);
 
 --
+-- Indexes for table `test`
+--
+ALTER TABLE `test`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -304,6 +347,11 @@ ALTER TABLE `subject`
 --
 ALTER TABLE `department`
   MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสข้อมูล', AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `login`
+--
+ALTER TABLE `login`
+  MODIFY `login_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสของชื่อผู้ใช้', AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `room`
 --
@@ -319,6 +367,11 @@ ALTER TABLE `student`
 --
 ALTER TABLE `subject`
   MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสข้อมูล', AUTO_INCREMENT=77;
+--
+-- AUTO_INCREMENT for table `test`
+--
+ALTER TABLE `test`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

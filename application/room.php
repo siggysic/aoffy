@@ -1,6 +1,7 @@
 <?php
 
 require('connect.php');
+session_start();
 mysql_query('SET NAMES UTF8');
 
 $numberOrder = 1;
@@ -61,9 +62,13 @@ $room = mysql_query($sql) or die('Get room failed.');
 
   </head>
 
+  <?php
+    if(isset($_SESSION["username"])) {
+  ?>
+
   <body>
-    <div class="row">
-      <div class="container">
+    <div class="row backgroud-green">
+      <div class="container" >
         <!-- <img src="img/kmutnb.png" class="img-responsive img-logo"> -->
         <h3 class="text-center">ระบบจัดการตารางสอบ</h3>
         <h4 class="text-right">คณะครุศาสตร์อุตสาหกรรม</h4>
@@ -92,6 +97,7 @@ $room = mysql_query($sql) or die('Get room failed.');
               <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="#">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
+              <li><a href="../application/login.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -104,7 +110,7 @@ $room = mysql_query($sql) or die('Get room failed.');
           <a href="#sidebar" data-toggle="collapse"><i class="glyphicon glyphicon-align-justify"></i></a>
           <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse">
             <li><a href="#">ข้อมูลวิชาสอบ</a></li>
-            <li><a href="#">ข้อมูลห้องสอบ</a></li>
+            <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
             <li><a href="#">ข้อมูลผู้สอบ</a></li>
             <li><a href="#">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
@@ -209,5 +215,11 @@ $room = mysql_query($sql) or die('Get room failed.');
     </nav>
 
   </body>
+
+  <?php 
+    }else {
+      header("LOCATION: " . $url . '/aoffy//application/login.php');
+    } 
+  ?>
 
 </html>
