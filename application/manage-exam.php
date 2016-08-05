@@ -26,7 +26,7 @@
 
   if(isset($_POST['sendEmail']) && $_POST['sendEmail'] == 'ส่งอีเมล์') {
     //send Email
-    $strTo = "leesonex@gmail.com";
+    $strTo = "s5502041620222@email.kmutnb.ac.th";
     $strSubject = "=?UTF-8?B?".base64_encode("ข้อมูลห้องสอบ")."?=";
     $strHeader = "Content-type: text/html; charset=UTF-8\r\n";
     $strHeader .= "From: ระบบจัดการตารางสอบ คณะครุศาสตร์อุตสาหกรรม<manage_exam@server.com>";
