@@ -448,7 +448,7 @@
           </blockquote>
 
           <?php if($statusSendMail) { ?>
-            <div class="alert alert-success" role="alert">ระบบได้ทำการส่ง อีเมลล์เรยีบร้อยแล้ว</div>
+            <div class="alert alert-success" role="alert">ระบบได้ทำการส่ง อีเมลล์เรียบร้อยแล้ว</div>
           <?php } ?>
 
           <?php
