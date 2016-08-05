@@ -6,6 +6,7 @@
 
   $term = '';
   $year = '';
+  $statusSendMail = false;
 
   if(isset($_POST['term'])) {
     $temp['term'] = $_POST['term'];
@@ -21,6 +22,43 @@
 
   if(isset($_POST['year_depart'])) {
     $temp['year'] = $_POST['year_depart'];
+  }
+
+  if(isset($_POST['sendEmail']) && $_POST['sendEmail'] == 'ส่งอีเมล์') {
+    //send Email
+    $strTo = "s5502041620222@email.kmutnb.ac.th";
+    $strSubject = "=?UTF-8?B?".base64_encode("ข้อมูลห้องสอบ")."?=";
+    $strHeader = "Content-type: text/html; charset=UTF-8\r\n";
+    $strHeader .= "From: ระบบจัดการตารางสอบ คณะครุศาสตร์อุตสาหกรรม<manage_exam@server.com>";
+    $strMessage = "
+      <h2>ตารางสอบ ภาคการเรียนที่ 1 ปีการศึกษา 2258</h2>
+      <h3>นายฐิติพงศ์  ธรรมวิสุทธิ์</h3>
+      <table border = '1'>
+      <thead>
+        <th>วันที่</th>
+        <th>เวลา</th>
+        <th>รหัสวิชา</th>
+        <th>ชื่อวิชา</th>
+        <th>ตอนที่</th>
+        <th>ห้องสอบ</th>
+      <thead>
+
+      <tr>
+        <td>30-11-2015</td>
+        <td>13:00 - 16:00</td>
+        <td>020123270</td>
+        <td>Basic Information Technology</td>
+        <td>1</td>
+        <td>205</td>
+      </tr>
+
+      </table>";
+
+      $flgSend = @mail($strTo, $strSubject, $strMessage, $strHeader);
+
+      if($flgSend) {
+        $statusSendMail = true;
+      }
   }
 
   if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
@@ -409,6 +447,10 @@
               <hr/>
           </blockquote>
 
+          <?php if($statusSendMail) { ?>
+            <div class="alert alert-success" role="alert">ระบบได้ทำการส่ง อีเมลล์เรยีบร้อยแล้ว</div>
+          <?php } ?>
+
           <?php
             if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
               if(!empty($department)) {
@@ -488,6 +530,13 @@
                 <?php $checkAllFormat = $allFormat; } ?>
               <?php } ?>
             </table>
+
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <input type="submit" name="sendEmail" class="btn btn-success" value="ส่งอีเมล์"><br>
+              </div>
+            </div>
+
           <?php } ?>
           </form>
         </div>
