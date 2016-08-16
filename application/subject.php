@@ -12,10 +12,29 @@ $sql = '';
 $url = "http://" . $_SERVER['SERVER_NAME'];         //get server name
 $data;
 
+if(isset($_GET['id'])) {
+  $sql = "SELECT subject_id, subject_number, name, start_time, end_time, day, section, term, year, amount FROM subject WHERE subject_id = " . $_GET['id'];
+  $result = mysql_query($sql);
+
+  while($subjectsData = mysql_fetch_assoc($result)) {
+    $data = $subjectsData;
+  }
+}
+
+if(isset($_POST['btnSubmit'])) {
+  echo $_POST['day'];
+  echo $_POST['start_time'];
+  echo $_POST['end_time'];
+}
+
 if(isset($_POST['Import'])) {
   echo $filename=$_FILES["file"]["tmp_name"];
   
 }
+
+//get all subjects.
+$sql = "SELECT subject_id, subject_number, name, start_time, end_time, day, section, term, year, amount FROM subject";
+$subject = mysql_query($sql) or die ('Get subject failed.');
 
 ?>
 
@@ -93,34 +112,74 @@ if(isset($_POST['Import'])) {
             <form enctype="multipart/form-data" name="addSubject" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" role="form">
               <h3 class="text-center">ข้อมูลรายวิชาสอบ</h3>
 
-              <input name="id" type="hidden" value="<?php if(isset($data)) { echo $data['room_id']; } ?>" />
+              <input name="id" type="hidden" value="<?php if(isset($data)) { echo $data['subject_id']; } ?>" />
               
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-3">
                   <div class="input-group area-padding">
-                    <span class="input-group-addon" id="building">ตึก</span>
-                    <input name="building" type="number" class="form-control" aria-describedby="building" min="0" 
-                      max="100" value="<?php if(isset($data)) { echo $data['build']; } ?>" required="true" />
-                  </div>
-                
-                  <div class="input-group area-padding">
-                    <span class="input-group-addon" id="floor">ชั้น</span>
-                    <input name="floor" type="number" class="form-control" aria-describedby="floor" min="0"
-                      max="10" value="<?php if(isset($data)) { echo $data['floor']; } ?>" required="true"/> 
+                    <span class="input-group-addon" id="number">รหัสวิชา</span>
+                    <input name="number" type="text" class="form-control" aria-describedby="number" value="<?php if(isset($data)) { echo $data['subject_id']; } ?>" required="true" />
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="input-group area-padding">
-                    <span class="input-group-addon" id="room-number">รหัสห้องสอบ</span>
-                    <input name="roomNumber" type="number" class="form-control" aria-describedby="room-number" min="0" 
-                      max="999" value="<?php if(isset($data)) { echo $data['room_number']; } ?>" required="true"/>
+                    <span class="input-group-addon" id="name">ชื่อวิชา</span>
+                    <input name="name" type="text" class="form-control" aria-describedby="name" value="<?php if(isset($data)) { echo $data['name']; } ?>" required="true" />
                   </div>
-                  
+                </div>
+
+                <div class="col-md-3">
                   <div class="input-group area-padding">
-                    <span class="input-group-addon" id="seat">จำนวนที่นั่งสอบ</span>
-                    <input name="seat" type="number" class="form-control" aria-describedby="seat" min="0"
-                      max="999" value="<?php if(isset($data)) { echo $data['seat']; } ?>" required="true"/> 
+                    <span class="input-group-addon" id="section">ตอนที่</span>
+                    <input name="section" type="number" class="form-control" aria-describedby="section" min="0" 
+                      max="99" value="<?php if(isset($data)) { echo $data['section']; } ?>" required="true"/>
+                  </div>
+                </div> 
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="input-group area-padding">
+                    <span class="input-group-addon" id="day">วันที่</span>
+                    <input name="day" type="date" class="form-control" aria-describedby="day" value="<?php if(isset($data)) { echo $data['day']; } ?>" required="true" />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="input-group area-padding">
+                    <span class="input-group-addon" id="start-time">เวลาเริ่มสอบ</span>
+                    <input name="start_time" type="time" class="form-control" aria-describedby="start-time" value="<?php if(isset($data)) { echo $data['start_time']; } ?>" required="true" />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="input-group area-padding">
+                    <span class="input-group-addon" id="end-time">เวลาสิ้นสุด</span>
+                    <input name="end_time" type="time" class="form-control" aria-describedby="end-time" value="<?php if(isset($data)) { echo $data['end_time']; } ?>" required="true" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="input-group area-padding">
+                    <span class="input-group-addon" id="term">ภาคการเรียน</span>
+                    <input name="term" type="number" class="form-control" aria-describedby="term" min="1" max="3" value="<?php if(isset($data)) { echo $data['term']; } ?>" required="true" />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="input-group area-padding">
+                    <span class="input-group-addon" id="year">ปีการศึกษา</span>
+                    <input name="year" type="number" class="form-control" aria-describedby="year" min="2499" max="3000" value="<?php if(isset($data)) { echo $data['year']; } ?>" required="true" />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="input-group area-padding">
+                    <span class="input-group-addon" id="amount">จำนวนผู้เข้าสอบ</span>
+                    <input name="amount" type="number" class="form-control" aria-describedby="amount" min="1" max="99" value="<?php if(isset($data)) { echo $data['amount']; } ?>" required="true" />
                   </div>
                 </div>
               </div>
@@ -150,26 +209,34 @@ if(isset($_POST['Import'])) {
                 <thead>
                   <tr>
                     <th class="text-center">ลำดับ</th>
-                    <th class="text-center">ตึก</th>
-                    <th class="text-center">ชั้น</th>
-                    <th class="text-center">รหัสห้องสอบ</th>
-                    <th class="text-center">จำนวนที่นั่งสอบ</th>
+                    <th class="text-center">รหัส</th>
+                    <th class="text-center">ชื่อ</th>
+                    <th class="text-center">ตอนที่</th>
+                    <th class="text-center">วันที่</th>
+                    <th class="text-center">เวลา</th>
+                    <th class="text-center">ภาคเรียน</th>
+                    <th class="text-center">ปีการศึกษา</th>
+                    <th class="text-center">จำนวนคนสอบ</th>
                     <th class="text-center">แก้ไข</th>
                     <th class="text-center">ลบ</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
-                  if(isset($room)) {
-                    while($rooms = mysql_fetch_assoc($room)) {
+                  if(isset($subject)) {
+                    while($subjects = mysql_fetch_assoc($subject)) {
                   ?>
                       <tr>
                         <td><?php echo $numberOrder++; ?></td>
-                        <td><?php echo $rooms['build'] ?></td>
-                        <td><?php echo $rooms['floor']; ?></td>
-                        <td><?php echo $rooms['room_number']; ?></td>
-                        <td><?php echo $rooms['seat']; ?></td>
-                        <td><a href="<?php echo $url . '/aoffy/application/room.php' . '?id=' . $rooms['room_id']; ?>" style="color: black;"><span class="glyphicon glyphicon-edit"></span></a></td>
+                        <td><?php echo $subjects['subject_number'] ?></td>
+                        <td><?php echo $subjects['name']; ?></td>
+                        <td><?php echo $subjects['section']; ?></td>
+                        <td><?php echo $subjects['day']; ?></td>
+                        <td><?php echo $subjects['start_time']. ' - ' .$subjects['end_time'] ?></td>
+                        <td><?php echo $subjects['term'] ?></td>
+                        <td><?php echo $subjects['year'] ?></td>
+                        <td><?php echo $subjects['amount'] ?></td>
+                        <td><a href="<?php echo $url . '/aoffy/application/subject.php' . '?id=' . $subjects['subject_id']; ?>" style="color: black;"><span class="glyphicon glyphicon-edit"></span></a></td>
                         <td><a href="#" style="color: black;"><span class="glyphicon glyphicon-trash"></span></a></td>
                       </tr>
                   <?php

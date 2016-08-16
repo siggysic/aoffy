@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 04, 2016 at 05:18 AM
+-- Generation Time: Aug 16, 2016 at 02:03 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 5.6.19
 
@@ -90,7 +90,8 @@ INSERT INTO `room` (`room_id`, `room_number`, `floor`, `build`, `seat`, `remain`
 (7, '404', '4', '52', 29, 0, 'ปกติ'),
 (19, '304', '3', '52', 25, 0, 'ปกติ'),
 (24, '203', '2', '52', 26, 0, 'ปกติ'),
-(25, '201', '2', '52', 29, 0, 'ปกติ');
+(25, '201', '2', '52', 29, 0, 'ปกติ'),
+(26, '601', '6', '52', 24, 0, 'ปกติ');
 
 -- --------------------------------------------------------
 
@@ -205,86 +206,86 @@ CREATE TABLE `subject` (
   `section` int(5) NOT NULL COMMENT 'ตอนที่',
   `term` int(1) NOT NULL COMMENT 'เทอม',
   `year` int(5) NOT NULL COMMENT 'ปีการศึกษา',
-  `hour` int(1) DEFAULT NULL COMMENT 'ชั่วโมง'
+  `amount` int(5) NOT NULL COMMENT 'จำนวนคนสอบ'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ข้อมูลวิชาที่จัดสอบ';
 
 --
 -- Dumping data for table `subject`
 --
 
-INSERT INTO `subject` (`subject_id`, `subject_number`, `name`, `start_time`, `end_time`, `day`, `section`, `term`, `year`, `hour`) VALUES
-(1, '020003203', 'Vocational Education Curriculum Development', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, NULL),
-(2, '040203111', 'Engineering Mathematics I', '09:00:00', '12:00:00', '2015-11-30', 17, 1, 2558, NULL),
-(3, '040203211', 'Engineering Mathematic III', '09:00:00', '12:00:00', '2015-11-30', 12, 1, 2558, NULL),
-(4, '020113981', 'Engineering Drawing', '09:00:00', '12:00:00', '2015-11-30', 1, 1, 2558, NULL),
-(5, '020133112', 'Hydraulics', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, NULL),
-(6, '020113950', 'Pneumatics and Hydraulics', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, NULL),
-(7, '030113260', 'Fundamental Drawing and Management', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, NULL),
-(12, '030113260', 'Fundamental Drawing and Management', '13:00:00', '16:00:00', '2015-11-30', 2, 1, 2558, NULL),
-(13, '020123270', 'Basic Information Technology', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, NULL),
-(14, '030113260', 'Fundamental Drawing and Management', '17:00:00', '20:00:00', '2015-11-30', 2, 1, 2558, NULL),
-(15, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(16, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(17, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 2, 1, 2558, NULL),
-(18, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 3, 1, 2558, NULL),
-(19, '020113190', 'Selected Topics in Mechanical Engineering', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(20, '020133185', 'Selected Topic in Mechatronics Engineering', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(21, '020113960', 'Computer-aided Design and Drawing', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(22, '020123272', 'Production Planning and Inventory Control', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(23, '020123241', 'Tool Engineering', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(24, '020123274', 'Safety Engineering', '13:00:00', '15:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(25, '020003202', 'Education Innovation and Information Technology', '13:00:00', '15:00:00', '2015-01-01', 2, 1, 2558, NULL),
-(26, '020133927', 'Modern Digital Circuit and Logic Design', '13:00:00', '16:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(27, '020113960', 'Computer-aided Design and Drawing', '13:00:00', '16:00:00', '2015-01-01', 2, 1, 2558, NULL),
-(28, '020133904', 'Fundamental of Mechanical Engineering', '13:00:00', '16:00:00', '2015-01-01', 1, 1, 2558, NULL),
-(29, '020113960', 'Computer-aided Design and Drawing', '17:00:00', '20:00:00', '2015-01-01', 2, 1, 2558, NULL),
-(30, '020113970', 'Industrial Electrical Technology', '09:00:00', '12:00:00', '2015-12-02', 1, 1, 2558, NULL),
-(31, '020113970', 'Industrial Electrical Technology', '09:00:00', '12:00:00', '2015-12-02', 2, 1, 2558, NULL),
-(32, '020133153', 'Image Processing and Machine Vision', '09:00:00', '12:00:00', '2015-12-02', 1, 1, 2558, NULL),
-(33, '020113104', 'Physical Metallurgy', '09:00:00', '12:00:00', '2015-12-02', 1, 1, 2558, NULL),
-(34, '080303601', 'Human Relations', '13:00:00', '16:00:00', '2015-12-02', 12, 1, 2558, NULL),
-(35, '080303603', 'Personality Development', '13:00:00', '16:00:00', '2015-12-02', 1, 1, 2558, NULL),
-(36, '020003204', 'Technical Subject Teaching Methods', '13:00:00', '16:00:00', '2015-12-02', 1, 1, 2558, NULL),
-(37, '020003204', 'Technical Subject Teaching Methods', '13:00:00', '16:00:00', '2015-12-02', 2, 1, 2558, NULL),
-(38, '080103001', 'English I', '09:00:00', '12:00:00', '2015-12-03', 57, 1, 2558, NULL),
-(39, '080103001', 'English I', '09:00:00', '12:00:00', '2015-12-03', 58, 1, 2558, NULL),
-(40, '080103001', 'Psychology for work', '09:00:00', '12:00:00', '2015-12-03', 5, 1, 2558, NULL),
-(41, '040113005', 'Chemistry in Everyday Life', '13:00:00', '16:00:00', '2015-12-03', 5, 1, 2558, NULL),
-(42, '020003121', 'Thai Language for Teachers', '13:00:00', '16:00:00', '2015-12-03', 5, 1, 2558, NULL),
-(43, '020113912', 'Machine Element Design I', '13:00:00', '16:00:00', '2015-12-03', 1, 1, 2558, NULL),
-(44, '040313010', 'Physics', '09:00:00', '12:00:00', '2015-12-04', 1, 1, 2558, NULL),
-(45, '020133924', 'Electronic Circuit and Devices I', '09:00:00', '12:00:00', '2015-12-04', 1, 1, 2558, NULL),
-(46, '020133951', 'Programmable Logic Controller', '13:00:00', '16:00:00', '2015-12-04', 1, 1, 2558, NULL),
-(47, '020113904', 'Engineering Mechanics', '13:00:00', '16:00:00', '2015-12-04', 1, 1, 2558, NULL),
-(48, '020133902', 'Measurement and Instrumentation', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, NULL),
-(49, '020133113', 'Mechanics of Machinery', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, NULL),
-(50, '020113984', 'Automatic Machine Practice', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, NULL),
-(51, '020113984', 'Automatic Machine Practice', '09:00:00', '12:00:00', '2015-12-08', 2, 1, 2558, NULL),
-(52, '020003206', 'Educational Measurement and Evaluation', '13:00:00', '16:00:00', '2015-12-08', 1, 1, 2558, NULL),
-(53, '020003206', 'Educational Measurement and Evaluation', '13:00:00', '16:00:00', '2015-12-08', 2, 1, 2558, NULL),
-(54, '020003206', 'Educational Measurement and Evaluation', '13:00:00', '16:00:00', '2015-12-08', 3, 1, 2558, NULL),
-(55, '020113930', 'Thermofluids', '13:00:00', '16:00:00', '2015-12-08', 1, 1, 2558, NULL),
-(56, '020003103', 'Computer and Programming', '09:00:00', '12:00:00', '2015-12-09', 1, 1, 2558, NULL),
-(57, '020003103', 'Computer and Programming', '09:00:00', '12:00:00', '2015-12-09', 2, 1, 2558, NULL),
-(58, '020133922', 'Electric Circuit Analysis I', '09:00:00', '12:00:00', '2015-12-09', 2, 1, 2558, NULL),
-(59, '020113103', 'Mechanics of Machinery', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, NULL),
-(60, '213305', 'Electric Circuit Analysis I', '09:00:00', '12:00:00', '2015-12-09', 1, 1, 2558, NULL),
-(61, '080303502', 'Volleyball', '13:00:00', '14:00:00', '2015-12-09', 5, 1, 2558, NULL),
-(62, '080303502', 'Volleyball', '13:00:00', '14:00:00', '2015-12-09', 6, 1, 2558, NULL),
-(63, '020113902', 'Engineering Statics', '13:00:00', '16:00:00', '2015-12-09', 1, 1, 2558, NULL),
-(64, '020123230', 'Metal Removal Process', '13:00:00', '16:00:00', '2015-12-09', 1, 1, 2558, NULL),
-(65, '020003203', 'Vocational Education Curriculum Development', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, NULL),
-(66, '020003104', 'Electricity in Everyday Life', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, NULL),
-(67, '020133923', 'Electric Circuit Analysis II', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, NULL),
-(68, '020113121', 'Fluid Mechanics', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, NULL),
-(69, '020003210', 'Teaching Media', '13:00:00', '16:00:00', '2015-12-11', 2, 1, 2558, NULL),
-(70, '020113903', 'Engineering Dynamics', '13:00:00', '16:00:00', '2015-12-11', 1, 1, 2558, NULL),
-(71, '020133906', 'Dynamics for Mechatronics', '13:00:00', '16:00:00', '2015-12-11', 1, 1, 2558, NULL),
-(72, '020113114', 'Mechanical Design', '09:00:00', '12:00:00', '2015-12-14', 1, 1, 2558, NULL),
-(73, '020003205', 'Psychology for Teachers', '09:00:00', '12:00:00', '2015-12-14', 1, 1, 2558, NULL),
-(74, '020113910', 'Mechanics of Solids', '13:00:00', '16:00:00', '2015-12-14', 1, 1, 2558, NULL),
-(75, '020113910', 'Mechanics of Solids', '13:00:00', '16:00:00', '2015-12-14', 2, 1, 2558, NULL),
-(76, '020133141', 'Sensors and Control Element', '13:00:00', '16:00:00', '2015-12-14', 1, 1, 2558, NULL);
+INSERT INTO `subject` (`subject_id`, `subject_number`, `name`, `start_time`, `end_time`, `day`, `section`, `term`, `year`, `amount`) VALUES
+(1, '020003203', 'Vocational Education Curriculum Development', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, 27),
+(2, '040203111', 'Engineering Mathematics I', '09:00:00', '12:00:00', '2015-11-30', 17, 1, 2558, 27),
+(3, '040203211', 'Engineering Mathematic III', '09:00:00', '12:00:00', '2015-11-30', 12, 1, 2558, 27),
+(4, '020113981', 'Engineering Drawing', '09:00:00', '12:00:00', '2015-11-30', 1, 1, 2558, 27),
+(5, '020133112', 'Hydraulics', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, 27),
+(6, '020113950', 'Pneumatics and Hydraulics', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, 27),
+(7, '030113260', 'Fundamental Drawing and Management', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, 27),
+(12, '030113260', 'Fundamental Drawing and Management', '13:00:00', '16:00:00', '2015-11-30', 2, 1, 2558, 33),
+(13, '020123270', 'Basic Information Technology', '13:00:00', '16:00:00', '2015-11-30', 1, 1, 2558, 33),
+(14, '030113260', 'Fundamental Drawing and Management', '17:00:00', '20:00:00', '2015-11-30', 2, 1, 2558, 33),
+(15, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 1, 1, 2558, 33),
+(16, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 1, 1, 2558, 33),
+(17, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 2, 1, 2558, 33),
+(18, '020003101', 'Basic Computer for Education', '09:00:00', '11:00:00', '2015-01-01', 3, 1, 2558, 33),
+(19, '020113190', 'Selected Topics in Mechanical Engineering', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, 33),
+(20, '020133185', 'Selected Topic in Mechatronics Engineering', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, 33),
+(21, '020113960', 'Computer-aided Design and Drawing', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, 29),
+(22, '020123272', 'Production Planning and Inventory Control', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, 29),
+(23, '020123241', 'Tool Engineering', '09:00:00', '12:00:00', '2015-01-01', 1, 1, 2558, 29),
+(24, '020123274', 'Safety Engineering', '13:00:00', '15:00:00', '2015-01-01', 1, 1, 2558, 29),
+(25, '020003202', 'Education Innovation and Information Technology', '13:00:00', '15:00:00', '2015-01-01', 2, 1, 2558, 29),
+(26, '020133927', 'Modern Digital Circuit and Logic Design', '13:00:00', '16:00:00', '2015-01-01', 1, 1, 2558, 29),
+(27, '020113960', 'Computer-aided Design and Drawing', '13:00:00', '16:00:00', '2015-01-01', 2, 1, 2558, 29),
+(28, '020133904', 'Fundamental of Mechanical Engineering', '13:00:00', '16:00:00', '2015-01-01', 1, 1, 2558, 29),
+(29, '020113960', 'Computer-aided Design and Drawing', '17:00:00', '20:00:00', '2015-01-01', 2, 1, 2558, 29),
+(30, '020113970', 'Industrial Electrical Technology', '09:00:00', '12:00:00', '2015-12-02', 1, 1, 2558, 29),
+(31, '020113970', 'Industrial Electrical Technology', '09:00:00', '12:00:00', '2015-12-02', 2, 1, 2558, 27),
+(32, '020133153', 'Image Processing and Machine Vision', '09:00:00', '12:00:00', '2015-12-02', 1, 1, 2558, 27),
+(33, '020113104', 'Physical Metallurgy', '09:00:00', '12:00:00', '2015-12-02', 1, 1, 2558, 27),
+(34, '080303601', 'Human Relations', '13:00:00', '16:00:00', '2015-12-02', 12, 1, 2558, 27),
+(35, '080303603', 'Personality Development', '13:00:00', '16:00:00', '2015-12-02', 1, 1, 2558, 27),
+(36, '020003204', 'Technical Subject Teaching Methods', '13:00:00', '16:00:00', '2015-12-02', 1, 1, 2558, 27),
+(37, '020003204', 'Technical Subject Teaching Methods', '13:00:00', '16:00:00', '2015-12-02', 2, 1, 2558, 27),
+(38, '080103001', 'English I', '09:00:00', '12:00:00', '2015-12-03', 57, 1, 2558, 27),
+(39, '080103001', 'English I', '09:00:00', '12:00:00', '2015-12-03', 58, 1, 2558, 27),
+(40, '080103001', 'Psychology for work', '09:00:00', '12:00:00', '2015-12-03', 5, 1, 2558, 27),
+(41, '040113005', 'Chemistry in Everyday Life', '13:00:00', '16:00:00', '2015-12-03', 5, 1, 2558, 31),
+(42, '020003121', 'Thai Language for Teachers', '13:00:00', '16:00:00', '2015-12-03', 5, 1, 2558, 31),
+(43, '020113912', 'Machine Element Design I', '13:00:00', '16:00:00', '2015-12-03', 1, 1, 2558, 31),
+(44, '040313010', 'Physics', '09:00:00', '12:00:00', '2015-12-04', 1, 1, 2558, 31),
+(45, '020133924', 'Electronic Circuit and Devices I', '09:00:00', '12:00:00', '2015-12-04', 1, 1, 2558, 31),
+(46, '020133951', 'Programmable Logic Controller', '13:00:00', '16:00:00', '2015-12-04', 1, 1, 2558, 31),
+(47, '020113904', 'Engineering Mechanics', '13:00:00', '16:00:00', '2015-12-04', 1, 1, 2558, 31),
+(48, '020133902', 'Measurement and Instrumentation', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, 31),
+(49, '020133113', 'Mechanics of Machinery', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, 31),
+(50, '020113984', 'Automatic Machine Practice', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, 31),
+(51, '020113984', 'Automatic Machine Practice', '09:00:00', '12:00:00', '2015-12-08', 2, 1, 2558, 34),
+(52, '020003206', 'Educational Measurement and Evaluation', '13:00:00', '16:00:00', '2015-12-08', 1, 1, 2558, 34),
+(53, '020003206', 'Educational Measurement and Evaluation', '13:00:00', '16:00:00', '2015-12-08', 2, 1, 2558, 34),
+(54, '020003206', 'Educational Measurement and Evaluation', '13:00:00', '16:00:00', '2015-12-08', 3, 1, 2558, 34),
+(55, '020113930', 'Thermofluids', '13:00:00', '16:00:00', '2015-12-08', 1, 1, 2558, 34),
+(56, '020003103', 'Computer and Programming', '09:00:00', '12:00:00', '2015-12-09', 1, 1, 2558, 34),
+(57, '020003103', 'Computer and Programming', '09:00:00', '12:00:00', '2015-12-09', 2, 1, 2558, 34),
+(58, '020133922', 'Electric Circuit Analysis I', '09:00:00', '12:00:00', '2015-12-09', 2, 1, 2558, 34),
+(59, '020113103', 'Mechanics of Machinery', '09:00:00', '12:00:00', '2015-12-08', 1, 1, 2558, 34),
+(60, '213305', 'Electric Circuit Analysis I', '09:00:00', '12:00:00', '2015-12-09', 1, 1, 2558, 34),
+(61, '080303502', 'Volleyball', '13:00:00', '14:00:00', '2015-12-09', 5, 1, 2558, 24),
+(62, '080303502', 'Volleyball', '13:00:00', '14:00:00', '2015-12-09', 6, 1, 2558, 24),
+(63, '020113902', 'Engineering Statics', '13:00:00', '16:00:00', '2015-12-09', 1, 1, 2558, 24),
+(64, '020123230', 'Metal Removal Process', '13:00:00', '16:00:00', '2015-12-09', 1, 1, 2558, 24),
+(65, '020003203', 'Vocational Education Curriculum Development', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, 24),
+(66, '020003104', 'Electricity in Everyday Life', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, 24),
+(67, '020133923', 'Electric Circuit Analysis II', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, 24),
+(68, '020113121', 'Fluid Mechanics', '09:00:00', '12:00:00', '2015-12-11', 1, 1, 2558, 24),
+(69, '020003210', 'Teaching Media', '13:00:00', '16:00:00', '2015-12-11', 2, 1, 2558, 24),
+(70, '020113903', 'Engineering Dynamics', '13:00:00', '16:00:00', '2015-12-11', 1, 1, 2558, 24),
+(71, '020133906', 'Dynamics for Mechatronics', '13:00:00', '16:00:00', '2015-12-11', 1, 1, 2558, 24),
+(72, '020113114', 'Mechanical Design', '09:00:00', '12:00:00', '2015-12-14', 1, 1, 2558, 24),
+(73, '020003205', 'Psychology for Teachers', '09:00:00', '12:00:00', '2015-12-14', 1, 1, 2558, 24),
+(74, '020113910', 'Mechanics of Solids', '13:00:00', '16:00:00', '2015-12-14', 1, 1, 2558, 24),
+(75, '020113910', 'Mechanics of Solids', '13:00:00', '16:00:00', '2015-12-14', 2, 1, 2558, 24),
+(76, '020133141', 'Sensors and Control Element', '13:00:00', '16:00:00', '2015-12-14', 1, 1, 2558, 24);
 
 -- --------------------------------------------------------
 
@@ -356,7 +357,7 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `room`
 --
 ALTER TABLE `room`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสข้อมูลห้อง', AUTO_INCREMENT=26;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสข้อมูลห้อง', AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT for table `student`
 --
