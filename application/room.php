@@ -93,7 +93,7 @@ $room = mysql_query($sql) or die('Get room failed.');
             <ul class="nav navbar-nav">
               <li><a href="../application/main-page.php"><i class="glyphicon glyphicon-home padding-right"></i>หน้าหลัก</a></li>
               <li><a href="../application/subject.php"><i class="glyphicon glyphicon-th-list padding-right"></i>จัดตารางสอบ</a></li>
-              <li><a href="#"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
+              <li><a href="../application/search-subject.php"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
               <li><a href="../application/logout.php">ออกจากระบบ</a></li>

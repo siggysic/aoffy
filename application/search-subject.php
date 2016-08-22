@@ -1,10 +1,9 @@
 <?php
-  session_start();
-  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/main-page.php'); }
+
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 
-  if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
+  if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'ค้นหา') {
     //main manage_exam concept.
     $i = 0;
     $countSubject = 0;
@@ -285,7 +284,7 @@
           <blockquote>
 
             <form name="autoExam" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-              <h3 class="text-center">จัดห้องสอบอัตโนมัติ</h3>
+              <h3 class="text-center">ค้นหาห้องสอบ</h3>
               <div class="input-group area-padding">
                 <span class="input-group-addon" id="term-select">ภาคเรียนที่</span>
                 <input name="term" type="number" class="form-control" aria-describedby="term-select" min="0" 
@@ -299,7 +298,7 @@
               </div>
 
               <div class="area-padding text-center">
-                <input name="btnSubmit" type="submit" class="btn btn-primary area-padding" value="เริ่มจัดอัตโนมัติ">
+                <input name="btnSubmit" type="submit" class="btn btn-primary area-padding" value="ค้นหา">
               </div>
             </form>
 
@@ -307,7 +306,7 @@
           </blockquote>
 
           <?php
-            if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'เริ่มจัดอัตโนมัติ') {
+            if(isset($_POST['btnSubmit']) && $_POST['btnSubmit'] == 'ค้นหา') {
 
               if($num_rows == 0) {
           ?>
@@ -321,9 +320,6 @@
           ?>
 
             <div class="container-fluid">
-              <div class="area-padding text-right">
-                <input name="btnSubmit" type="submit" class="btn btn-success area-padding" value="บันทึก">
-              </div><br>
               <table class="table table-hover" border="1">
                 <thead>
                   <tr>
@@ -410,5 +406,4 @@
     </nav>
 
   </body>
-
 </html>
