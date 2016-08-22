@@ -380,8 +380,13 @@
                           <?php if(isset($formatSection[$i])) { ?>
                             <td>
                               <?php for($j=0; $j<count($formatSection[$i]); $j++) { ?>
-                                <?php echo $formatSection[$i][$j]['room_number']; ?>
+                                <?php if($j==0) {
+                                  $formatEcho = $formatSection[$i][$j]['room_number'];
+                                }else {
+                                  $formatEcho = $formatEcho. ', ' .$formatSection[$i][$j]['room_number'];
+                                } ?>
                               <?php } ?>
+                              <?php echo $formatEcho; ?>
                             </td>
                             <?php }else { ?>
                               <td><?php echo "ไม่ได้ห้อง"; ?></td>
@@ -410,5 +415,4 @@
     </nav>
 
   </body>
-
 </html>
