@@ -117,7 +117,10 @@
         for($i=0; $i<count($dataRoom); $i++) {
           if($dataRoom[$i]['status'] == 'ว่าง') {
             if($people == $dataRoom[$i]['seat']) {
-              return $dataRoom[$i];
+              $dataRoom[$i]['key'] = $i;
+              $dataRoom[$i]['distance'] = 0;
+              $GLOBALS['forSend'] = $dataRoom[$i];
+              return $GLOBALS['forSend'];
             }
           }
         }
@@ -163,7 +166,11 @@
       foreach ($dataSubject as $key => $value) {
         $checkFullRoom = findFullRoom($dataSubject[$key]['amount'], $dataRoom);
         if($checkFullRoom) {
-
+          $dataRoom[$checkFullRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
+          $formatSection[$key][0]['student'] = $dataSubject[$key]['amount'];
+          $formatSection[$key][0]['room_number'] = $checkFullRoom['room_number'];
+          $formatSection[$key][0]['room_id'] = $checkFullRoom['room_id'];
+          $formatSection[$key][0]['distance'] = $formatSection[$key][0]['student'];
         }else if(!$checkFullRoom) {
           $checkRoom = findRoom($dataSubject[$key]['amount'], $dataRoom);
           if($checkRoom['distance'] > 0) {

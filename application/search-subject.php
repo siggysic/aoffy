@@ -34,7 +34,7 @@
     $forSend;
 
     //Third, get subject have exam in term and year as you want.
-    $sqlGetSubject = "SELECT * FROM subject WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
+    $sqlGetSubject = "SELECT * FROM subject WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " AND subject.subject_number = " . $_POST['sub_id'] . " AND subject.section = " . $_POST['section'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
     $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
     
     while($subjects = mysql_fetch_assoc($subject)) {
@@ -116,7 +116,10 @@
         for($i=0; $i<count($dataRoom); $i++) {
           if($dataRoom[$i]['status'] == 'ว่าง') {
             if($people == $dataRoom[$i]['seat']) {
-              return $dataRoom[$i];
+              $dataRoom[$i]['key'] = $i;
+              $dataRoom[$i]['distance'] = 0;
+              $GLOBALS['forSend'] = $dataRoom[$i];
+              return $GLOBALS['forSend'];
             }
           }
         }
@@ -162,7 +165,11 @@
       foreach ($dataSubject as $key => $value) {
         $checkFullRoom = findFullRoom($dataSubject[$key]['amount'], $dataRoom);
         if($checkFullRoom) {
-
+          $dataRoom[$checkFullRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
+          $formatSection[$key][0]['student'] = $dataSubject[$key]['amount'];
+          $formatSection[$key][0]['room_number'] = $checkFullRoom['room_number'];
+          $formatSection[$key][0]['room_id'] = $checkFullRoom['room_id'];
+          $formatSection[$key][0]['distance'] = $formatSection[$key][0]['student'];
         }else if(!$checkFullRoom) {
           $checkRoom = findRoom($dataSubject[$key]['amount'], $dataRoom);
           if($checkRoom['distance'] > 0) {
@@ -215,6 +222,14 @@
 
   if(isset($_POST['year'])) {
     $temp['year'] = $_POST['year'];
+  }
+
+  if(isset($_POST['sub_id'])) {
+    $temp['sub_id'] = $_POST['sub_id'];
+  }
+
+  if(isset($_POST['section'])) {
+    $temp['section'] = $_POST['section'];
   }
 
 ?>
@@ -295,6 +310,16 @@
                 <span class="input-group-addon" id="year-select">ปีการศึกษา</span>
                 <input name="year" type="number" class="form-control" aria-describedby="year-select" min="2500"
                   value="<?php echo (isset($temp['year'])) ? $temp['year'] : ''; ?>" /> 
+              </div>
+
+              <div class="input-group area-padding">
+                <span class="input-group-addon" id="year-select">รหัสวิชา</span>
+                <input name="sub_id" type="number" class="form-control" value="<?php echo (isset($temp['sub_id'])) ? $temp['sub_id'] : ''; ?>" /> 
+              </div>
+
+              <div class="input-group area-padding">
+                <span class="input-group-addon" id="year-select">Section</span>
+                <input name="section" type="number" class="form-control" value="<?php echo (isset($temp['section'])) ? $temp['section'] : ''; ?>" /> 
               </div>
 
               <div class="area-padding text-center">
