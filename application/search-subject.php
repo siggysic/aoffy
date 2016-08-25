@@ -358,65 +358,72 @@
                 </thead>
                 <tbody>
                   <?php
-                    for($i=0; $i<count($dataSubject); $i++) {
-                  ?>
-                    <tr>
-                        <?php if($dataSubject[$i]['day'] != $checkRealDay) { ?>
-                          <td rowspan="<?php echo $formatCol[$dataSubject[$i]['day']]; ?>">
-                            <?php
-                              $checkRealDay = $dataSubject[$i]['day'];
-                              echo $dataSubject[$i]['day'];
-                            ?>
-                          </td>
-                        <?php } ?>
-                        <?php $strEnd = $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time'];
-                          if($strEnd != $checkRealTime) {
-                        ?>
-                          <td rowspan="<?php echo $formatTime[$dataSubject[$i]['day']][$strEnd]; ?>">
-                            <?php
-                              $checkRealTime = $strEnd;
-                              echo $strEnd;
-                            ?>
-                          </td>
-                        <?php } ?>
-                        <?php $subSection = $dataSubject[$i]['subject_number']. '-' .$dataSubject[$i]['section'];
-                          if($checkSec != $subSection) {
-                        ?>
-                          <td>
-                            <?php
-                              $checkSec = $subSection;
-                              echo $dataSubject[$i]['subject_number'];  
-                            ?>
-                          </td>
-                          <td>
-                            <?php
-                              echo $dataSubject[$i]['name'];
-                            ?>
-                          </td>
-                          <td>
-                            <?php
-                              echo $dataSubject[$i]['section'];
-                            ?>
-                          </td>
-                          <?php if(isset($formatSection[$i])) { ?>
-                            <td>
-                              <?php for($j=0; $j<count($formatSection[$i]); $j++) { ?>
-                                <?php if($j==0) {
-                                  $formatEcho = $formatSection[$i][$j]['room_number'];
-                                }else {
-                                  $formatEcho = $formatEcho. ', ' .$formatSection[$i][$j]['room_number'];
-                                } ?>
-                              <?php } ?>
-                              <?php echo $formatEcho; ?>
+                    if(isset($dataSubject)) {
+                      for($i=0; $i<count($dataSubject); $i++) {
+                    ?>
+                      <tr>
+                          <?php if($dataSubject[$i]['day'] != $checkRealDay) { ?>
+                            <td rowspan="<?php echo $formatCol[$dataSubject[$i]['day']]; ?>">
+                              <?php
+                                $checkRealDay = $dataSubject[$i]['day'];
+                                echo $dataSubject[$i]['day'];
+                              ?>
                             </td>
-                            <?php }else { ?>
-                              <td><?php echo "ไม่ได้ห้อง"; ?></td>
-                            <?php } ?>
                           <?php } ?>
-                      </tr>
-                  <?php
-                    }
-                  ?>
+                          <?php $strEnd = $dataSubject[$i]['start_time'] . ' - ' . $dataSubject[$i]['end_time'];
+                            if($strEnd != $checkRealTime) {
+                          ?>
+                            <td rowspan="<?php echo $formatTime[$dataSubject[$i]['day']][$strEnd]; ?>">
+                              <?php
+                                $checkRealTime = $strEnd;
+                                echo $strEnd;
+                              ?>
+                            </td>
+                          <?php } ?>
+                          <?php $subSection = $dataSubject[$i]['subject_number']. '-' .$dataSubject[$i]['section'];
+                            if($checkSec != $subSection) {
+                          ?>
+                            <td>
+                              <?php
+                                $checkSec = $subSection;
+                                echo $dataSubject[$i]['subject_number'];  
+                              ?>
+                            </td>
+                            <td>
+                              <?php
+                                echo $dataSubject[$i]['name'];
+                              ?>
+                            </td>
+                            <td>
+                              <?php
+                                echo $dataSubject[$i]['section'];
+                              ?>
+                            </td>
+                            <?php if(isset($formatSection[$i])) { ?>
+                              <td>
+                                <?php for($j=0; $j<count($formatSection[$i]); $j++) { ?>
+                                  <?php if($j==0) {
+                                    $formatEcho = $formatSection[$i][$j]['room_number'];
+                                  }else {
+                                    $formatEcho = $formatEcho. ', ' .$formatSection[$i][$j]['room_number'];
+                                  } ?>
+                                <?php } ?>
+                                <?php echo $formatEcho; ?>
+                              </td>
+                              <?php }else { ?>
+                                <td><?php echo "ไม่ได้ห้อง"; ?></td>
+                              <?php } ?>
+                            <?php } ?>
+                        </tr>
+                    <?php
+                      }
+                    }else { ?>
+                      <div class="alert alert-danger text-center" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">ผิดพลาด:</span>
+                        ไม่พบข้อมูลที่คุณต้องการ
+                      </div>
+                    <?php } ?>
                 </tbody>
               </table>
             </div><hr/>
