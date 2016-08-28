@@ -168,6 +168,7 @@
         if($checkFullRoom) {
           $dataRoom[$checkFullRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
           $formatSection[$key][0]['student'] = $dataSubject[$key]['amount'];
+          $formatSection[$key][0]['subject_id'] = $dataSubject[$key]['subject_id'];
           $formatSection[$key][0]['room_number'] = $checkFullRoom['room_number'];
           $formatSection[$key][0]['room_id'] = $checkFullRoom['room_id'];
           $formatSection[$key][0]['distance'] = $formatSection[$key][0]['student'];
@@ -176,6 +177,7 @@
           if($checkRoom['distance'] > 0) {
             $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
             $formatSection[$key][0]['student'] = $dataSubject[$key]['amount'];
+            $formatSection[$key][0]['subject_id'] = $dataSubject[$key]['subject_id'];
             $formatSection[$key][0]['room_number'] = $checkRoom['room_number'];
             $formatSection[$key][0]['room_id'] = $checkRoom['room_id'];
             $formatSection[$key][0]['distance'] = $formatSection[$key][0]['student'];
@@ -185,6 +187,7 @@
             if($checkRoom['key']) {
               $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
               $formatSection[$key][$cCount]['student'] = $dataSubject[$key]['amount'];
+              $formatSection[$key][$cCount]['subject_id'] = $dataSubject[$key]['subject_id'];
               $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
               $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
               $formatSection[$key][$cCount]['distance'] = $checkRoom['distance'];
@@ -198,6 +201,7 @@
                 $checkRoom = roomDevide(-$checkRoom['distance'], $dataRoom);
                 $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
                 $formatSection[$key][$cCount]['student'] = $dataSubject[$key]['amount'];
+                $formatSection[$key][$cCount]['subject_id'] = $dataSubject[$key]['subject_id'];
                 $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
                 $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
                 $formatSection[$key][$cCount]['distance'] = $checkRoom['distance'];
@@ -214,6 +218,7 @@
     }
 
     $num_rows = count($subject);
+    $_SESSION['storeSection'] = $formatSection;
     //echo $num_rows;
   }
 
@@ -223,6 +228,23 @@
 
   if(isset($_POST['year'])) {
     $temp['year'] = $_POST['year'];
+  }
+
+  if(isset($_POST['btnSave'])) {
+    $sql = "UPDATE subject SET exam_room='ไม่ได้ห้อง' WHERE term=" . "'" . $_POST['term_tmp'] . "'" . " AND year=" . "'" . $_POST['year_tmp'] . "'";
+    mysql_query($sql) or die('Update exam room failed.');
+    $storeSave = $_SESSION['storeSection'];
+    foreach ($storeSave as $key => $value) {
+      for($j=0; $j<count($storeSave[$key]); $j++) {
+        if($j==0) {
+          $formatExam = $storeSave[$key][$j]['room_number'];
+        }else {
+          $formatExam = $formatExam . ', ' . $storeSave[$key][$j]['room_number'];
+        }
+      }
+      $sql = "UPDATE subject SET exam_room=" . "'" . $formatExam . "'" . " WHERE subject_id=" . "'" . $storeSave[$key][0]['subject_id'] . "'";
+      mysql_query($sql) or die('Update exam room failed.');
+    }
   }
 
 ?>
@@ -329,7 +351,11 @@
 
             <div class="container-fluid">
               <div class="area-padding text-right">
-                <input name="btnSubmit" type="submit" class="btn btn-success area-padding" value="บันทึก">
+                <form name="saveExam" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                  <input name="btnSave" type="submit" class="btn btn-success area-padding" value="บันทึก">
+                  <input type="hidden" name="term_tmp" value="<?php if(isset($temp['term'])){ echo $temp['term']; } ?>">
+                  <input type="hidden" name="year_tmp" value="<?php if(isset($temp['year'])){ echo $temp['year']; } ?>">
+                </form>
               </div><br>
               <table class="table table-hover" border="1">
                 <thead>

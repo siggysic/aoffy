@@ -32,22 +32,25 @@
     $checkSub = '';
     $formatSection;
     $forSend;
-
+    $sub = '';
+    $sec = '';
     //Third, get subject have exam in term and year as you want.
-    $sqlGetSubject = "SELECT * FROM subject WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " AND subject.subject_number = " . $_POST['sub_id'] . " AND subject.section = " . $_POST['section'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
+    if(!$_POST['sub_id']) {
+      $sub = ' IS NOT NULL';
+    }else {
+      $sub =  ' = ' . "'" . $_POST['sub_id'] . "'";
+    }
+    if(!$_POST['section']) {
+      $sec = ' IS NOT NULL';
+    }else {
+      $sec =  ' = ' . "'" . $_POST['section'] . "'";
+    }
+    $sqlGetSubject = "SELECT * FROM subject WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " AND subject.subject_number" . $sub . " AND subject.section" . $sec . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
     $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
     
     while($subjects = mysql_fetch_assoc($subject)) {
       $dataSubject[$countSubject] = $subjects;
       $countSubject++; 
-    }
-
-    $sqlGetRoom = "SELECT * FROM room";
-    $room = mysql_query($sqlGetRoom) or die('Get room error.');
-
-    while($rooms = mysql_fetch_assoc($room)) {
-      $dataRoom[$countRoom] = $rooms;
-      $countRoom++;
     }
 
     if(isset($dataSubject)) {
@@ -74,140 +77,6 @@
         }else {
           $countSec++;
           $formatSec[$subSec] = $countSec;
-        }
-      }
-    }
-
-    function roomDevide($people, $dataRoom) {
-      $cFunction = 0;
-      if(isset($people) && isset($dataRoom) && 0 < $people) {
-        for($i=0; $i<count($dataRoom); $i++) {
-          if($dataRoom[$i]['status'] == 'ว่าง') {
-            $distance[$i] = $dataRoom[$i]['seat'] - $people;
-            if(empty($value)) {
-              $value = $distance[$i];
-              $dataRoom[$i]['key'] = $i;
-              $dataRoom[$i]['distance'] = $distance[$i];
-              $GLOBALS['forSend'] = $dataRoom[$i];
-            }
-            if(!empty($value)) {
-              if($value > $distance[$i]) {
-                $value = $distance[$i];
-                $dataRoom[$i]['key'] = $i;
-                $dataRoom[$i]['distance'] = $distance[$i];
-                $GLOBALS['forSend'] = $dataRoom[$i];
-              }
-            }
-          }
-          if($cFunction == count($dataRoom)-1) {
-            if(empty($value)) {
-              return;
-            }else {
-              return $GLOBALS['forSend'];
-            }
-          }
-          $cFunction = $cFunction+1;
-        }
-      }
-    }
-
-    function findFullRoom($people, $dataRoom) {
-      if(isset($people) && isset($dataRoom)) {
-        for($i=0; $i<count($dataRoom); $i++) {
-          if($dataRoom[$i]['status'] == 'ว่าง') {
-            if($people == $dataRoom[$i]['seat']) {
-              $dataRoom[$i]['key'] = $i;
-              $dataRoom[$i]['distance'] = 0;
-              $GLOBALS['forSend'] = $dataRoom[$i];
-              return $GLOBALS['forSend'];
-            }
-          }
-        }
-      }
-    }
-
-    function findRoom($people, $dataRoom) {
-      $cFunction = 0;
-      if(isset($people) && isset($dataRoom) && 0 < $people) {
-        for($i=0; $i<count($dataRoom); $i++) {
-          if($dataRoom[$i]['status'] == 'ว่าง') {
-            $distance[$i] = $dataRoom[$i]['seat'] - $people;
-            if($distance[$i] > 0) {
-              if(empty($value)) {
-                $value = $distance[$i];
-                $dataRoom[$i]['key'] = $i;
-                $dataRoom[$i]['distance'] = $distance[$i];
-                $GLOBALS['forSend'] = $dataRoom[$i];
-              }
-              if(!empty($value)) {
-                if($value > $distance[$i]) {
-                  $value = $distance[$i];
-                  $dataRoom[$i]['key'] = $i;
-                  $dataRoom[$i]['distance'] = $distance[$i];
-                  $GLOBALS['forSend'] = $dataRoom[$i];
-                }
-              }
-            }
-          }
-          if($cFunction == count($dataRoom)-1) {
-            if(empty($value)) {
-              return;
-            }else {
-              return $GLOBALS['forSend'];
-            }
-          }
-          $cFunction = $cFunction+1;
-        }
-      }
-    }
-
-    if(isset($dataSubject) && isset($dataRoom)) {
-      foreach ($dataSubject as $key => $value) {
-        $checkFullRoom = findFullRoom($dataSubject[$key]['amount'], $dataRoom);
-        if($checkFullRoom) {
-          $dataRoom[$checkFullRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
-          $formatSection[$key][0]['student'] = $dataSubject[$key]['amount'];
-          $formatSection[$key][0]['room_number'] = $checkFullRoom['room_number'];
-          $formatSection[$key][0]['room_id'] = $checkFullRoom['room_id'];
-          $formatSection[$key][0]['distance'] = $formatSection[$key][0]['student'];
-        }else if(!$checkFullRoom) {
-          $checkRoom = findRoom($dataSubject[$key]['amount'], $dataRoom);
-          if($checkRoom['distance'] > 0) {
-            $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
-            $formatSection[$key][0]['student'] = $dataSubject[$key]['amount'];
-            $formatSection[$key][0]['room_number'] = $checkRoom['room_number'];
-            $formatSection[$key][0]['room_id'] = $checkRoom['room_id'];
-            $formatSection[$key][0]['distance'] = $formatSection[$key][0]['student'];
-          }else if(empty($checkRoom)) {
-            $cCount = 0;
-            $checkRoom = roomDevide($dataSubject[$key]['amount'], $dataRoom);
-            if($checkRoom['key']) {
-              $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
-              $formatSection[$key][$cCount]['student'] = $dataSubject[$key]['amount'];
-              $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
-              $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
-              $formatSection[$key][$cCount]['distance'] = $checkRoom['distance'];
-              if($formatSection[$key][$cCount]['distance'] < 0) {
-                $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'] + $formatSection[$key][$cCount]['distance'];
-              }else {
-                $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'];
-              }
-              while ($checkRoom['distance'] < 0) {
-                $cCount++;
-                $checkRoom = roomDevide(-$checkRoom['distance'], $dataRoom);
-                $dataRoom[$checkRoom['key']]['status'] = 'ถูกใช้งานแล้ว';
-                $formatSection[$key][$cCount]['student'] = $dataSubject[$key]['amount'];
-                $formatSection[$key][$cCount]['room_number'] = $checkRoom['room_number'];
-                $formatSection[$key][$cCount]['room_id'] = $checkRoom['room_id'];
-                $formatSection[$key][$cCount]['distance'] = $checkRoom['distance'];
-                if($formatSection[$key][$cCount]['distance'] < 0) {
-                  $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'] + $formatSection[$key][$cCount]['distance'];
-                }else {
-                  $formatSection[$key][$cCount]['distance'] = $formatSection[$key][$cCount]['student'] - $formatSection[$key][$cCount-1]['distance'];
-                }
-              }
-            }
-          }
         }
       }
     }
@@ -399,21 +268,12 @@
                                 echo $dataSubject[$i]['section'];
                               ?>
                             </td>
-                            <?php if(isset($formatSection[$i])) { ?>
-                              <td>
-                                <?php for($j=0; $j<count($formatSection[$i]); $j++) { ?>
-                                  <?php if($j==0) {
-                                    $formatEcho = $formatSection[$i][$j]['room_number'];
-                                  }else {
-                                    $formatEcho = $formatEcho. ', ' .$formatSection[$i][$j]['room_number'];
-                                  } ?>
-                                <?php } ?>
-                                <?php echo $formatEcho; ?>
-                              </td>
-                              <?php }else { ?>
-                                <td><?php echo "ไม่ได้ห้อง"; ?></td>
-                              <?php } ?>
-                            <?php } ?>
+                            <td>
+                              <?php
+                                echo $dataSubject[$i]['exam_room'];
+                              ?>
+                            </td>
+                          <?php } ?>
                         </tr>
                     <?php
                       }
