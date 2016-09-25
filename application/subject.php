@@ -100,6 +100,7 @@ $subject = mysql_query($sql) or die ('Get subject failed.');
             <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
             <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
             <li><a href="../application/subject.php">ข้อมูลผู้สอบ</a></li>
+            <li><a href="../application/manage-pdf.php">ข้อมูลตารางสอบ PDF</a></li>
             <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
@@ -191,17 +192,6 @@ $subject = mysql_query($sql) or die ('Get subject failed.');
             </form>
 
               <hr/>
-          </blockquote>
-
-          <blockquote>
-            <form enctype="multipart/form-data" method="post" role="form">
-                <div class="form-group">
-                    <label for="exampleInputFile">File Upload</label>
-                    <input type="file" name="file" id="file" size="150">
-                    <p class="help-block">Only Excel/CSV File Import.</p>
-                </div>
-                <button type="submit" class="btn btn-default" name="Import" value="Import">Upload</button>
-            </form>
           </blockquote>
 
             <div class="container-fluid">

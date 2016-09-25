@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -39,7 +42,6 @@
               <li><a href="../application/search-subject.php"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li class="active"><a href="../application/contact-us.php">ติดต่อเรา</a></li>
-              <li><a href="../application/logout.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -48,16 +50,7 @@
     
     <div class="row">
       <div class="container">
-        <div class="col-sm-2">
-          <a href="#sidebar" data-toggle="collapse"><i class="glyphicon glyphicon-align-justify"></i></a>
-          <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse">
-            <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
-            <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
-            <li><a href="../application/subject.php">ข้อมูลผู้สอบ</a></li>
-            <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-10">
+        <div class="col-sm-12">
           <div class="container-fluid">
             <div class="panel panel-primary">
               <div class="panel-heading"><i class="glyphicon glyphicon-user padding-right"></i>ติดต่อเรา</div>

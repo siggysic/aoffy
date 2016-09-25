@@ -1,5 +1,7 @@
 <?php
   session_start();
+  if(!isset($_SESSION["username"])) { header("LOCATION: " . $url . '/aoffy/application/main-page.php'); }
+  define ('SITE_ROOT', realpath(dirname(__FILE__)));
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 
@@ -101,6 +103,24 @@
     $temp['section'] = $_POST['section'];
   }
 
+  if(isset($_POST['btnUploadPdf'])) {
+    $uploads_dir = SITE_ROOT."/uploads";
+    if(isset($_POST['modalSubjectId'])) {
+      $subjectIdForPdf = $_POST['modalSubjectId'];
+    }
+
+    if($_FILES["filePdf"]["error"] == UPLOAD_ERR_OK) {
+      $tmp_name = $_FILES["filePdf"]["tmp_name"];
+      $name = basename($_FILES["filePdf"]["name"]);
+      //if uploads to folder success.
+      if(move_uploaded_file($tmp_name, "$uploads_dir/$name")) {
+        //update filename in db
+        $sql = "UPDATE subject SET filename=" . "'" . $name . "'" . " WHERE subject_id=" . "'" . $subjectIdForPdf . "'";
+        mysql_query($sql) or die('Update pdf failed.');
+      }
+    }
+  }
+
 ?>
 
 <html lang="en">
@@ -110,7 +130,6 @@
     <link rel="stylesheet" href="../lib/css/custom.css">
     <script src="../lib/js/jquery-1.12.4.min.js"></script>
     <script src="../lib/js/bootstrap.min.js"></script>
-
   </head>
 
   <body>
@@ -144,6 +163,7 @@
               <li><a href="../application/search-subject.php"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
+              <li><a href="../application/logout.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -152,7 +172,18 @@
     
     <div class="row">
       <div class="container">
-        <div class="col-sm-12">
+        <div class="col-sm-2">
+          <a href="#sidebar" data-toggle="collapse"><i class="glyphicon glyphicon-align-justify"></i></a>
+          <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse in">
+            <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
+            <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
+            <li><a href="../application/subject.php">ข้อมูลผู้สอบ</a></li>
+            <li><a href="../application/manage-pdf.php">ข้อมูลตารางสอบ PDF</a></li>
+            <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
+          </ul>
+        </div>
+
+        <div class="col-sm-10">
           <!-- block head in manage-exam -->
           <blockquote>
 
@@ -212,7 +243,8 @@
                     <th>ชื่อวิชา</th>
                     <th>ตอนที่</th>
                     <th>ห้องสอบ</th>
-                    <th>รายชื่อผู้เข้าสอบ</th>
+                    <th>ผู้เข้าสอบ</th>
+                    <th>แก้ไข Pdf</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -265,9 +297,24 @@
                             </td>
                             <td>
                               <?php 
+                                if($dataSubject[$i]['exam_room'] != 'ไม่ได้ห้อง') {
+                                  if($dataSubject[$i]['filename'] != "") {
+                              ?>
+                                  <a href="<?php echo "./uploads/".$dataSubject[$i]['filename']; ?>" target="_blank"><?php echo $dataSubject[$i]['filename']; ?></a>
+                              <?php 
+                                  }else {
+                              ?>
+                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadPdfModal" data-whatever="<?php echo $dataSubject[$i]['subject_id'] ?>">Upload รายชื่อ</button>
+                              <?php
+                                  }
+                                }
+                              ?>
+                            </td>
+                            <td style="text-align: center;">
+                              <?php
                                 if($dataSubject[$i]['filename'] != "") {
                               ?>
-                                <a href="<?php echo "./uploads/".$dataSubject[$i]['filename']; ?>" target="_blank"><?php echo $dataSubject[$i]['filename']; ?></a>
+                                <i class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="modal" data-target="#uploadPdfModal" data-whatever="<?php echo $dataSubject[$i]['subject_id'] ?>"></i>
                               <?php
                                 }
                               ?>
@@ -301,5 +348,34 @@
       </div>
     </nav>
 
+    <!-- Modal upload pdf -->
+      <div class="modal fade" id="uploadPdfModal" tabindex="-1" role="dialog" aria-labelledby="uploadPdfModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalLabel">Upload PDF</h4>
+            </div>
+            <div class="modal-body">
+              <form enctype="multipart/form-data" name="uploadPdf" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                <div class="form-group">
+                  <label for="filePdf" class="control-label">Select file pdf:</label>
+                  <input type="file" class="form-control" style="width: 100%;" id="filePdf" name="filePdf" accept="application/pdf">
+                </div>
+                <input type="hidden" name="modalSubjectId" id="modalSubjectId">
+                <input type="submit" name="btnUploadPdf" class="btn btn-primary" value="Upload">
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- End modal upload pdf -->
   </body>
+
+  <!-- If order to tag head on top it will doesn't working. -->
+  <script src="../lib/js/manage-pdf.js"></script>
+
 </html>
