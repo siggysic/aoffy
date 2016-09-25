@@ -188,7 +188,7 @@
           <blockquote>
 
             <form name="autoExam" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-              <h3 class="text-center">ค้นหาห้องสอบ</h3>
+              <h3 class="text-center">อัพโหลดรายชื่อผู้เข้าสอบ PDF</h3>
               <div class="input-group area-padding">
                 <span class="input-group-addon" id="term-select">ภาคเรียนที่</span>
                 <input name="term" type="number" class="form-control" aria-describedby="term-select" min="0" 
