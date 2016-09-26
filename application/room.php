@@ -32,7 +32,7 @@ if(isset($_POST['btnSubmit']) && isset($_POST['id'])) {
 }
 
 function addRoom($build, $floor, $number, $seat) {
-  $sql = "INSERT INTO room (build, floor, room_number, seat, status) VALUE ('$build', '$floor', '$number', $seat, 'ปกติ')";
+  $sql = "INSERT INTO room (build, floor, room_number, seat, remain, status) VALUE ('$build', '$floor', '$number', $seat, $seat, 'ว่าง')";
 
   mysql_query($sql) or die('Insert room failed.');
 }
@@ -110,7 +110,6 @@ $room = mysql_query($sql) or die('Get room failed.');
           <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse in">
             <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
             <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
-            <li><a href="../application/subject.php">ข้อมูลผู้สอบ</a></li>
             <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
