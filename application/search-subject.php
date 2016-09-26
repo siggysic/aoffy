@@ -1,5 +1,5 @@
 <?php
-
+  session_start();
   require_once 'connect.php';
   mysql_query("SET NAMES UTF8");
 
@@ -144,7 +144,6 @@
               <li><a href="../application/search-subject.php"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li><a href="../application/contact-us.php">ติดต่อเรา</a></li>
-              <li><a href="../application/logout.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -222,6 +221,7 @@
                     <th>ชื่อวิชา</th>
                     <th>ตอนที่</th>
                     <th>ห้องสอบ</th>
+                    <th>รายชื่อผู้เข้าสอบ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -270,6 +270,15 @@
                             <td>
                               <?php
                                 echo $dataSubject[$i]['exam_room'];
+                              ?>
+                            </td>
+                            <td>
+                              <?php 
+                                if($dataSubject[$i]['filename'] != "") {
+                              ?>
+                                <a href="<?php echo "./uploads/".$dataSubject[$i]['filename']; ?>" target="_blank"><?php echo $dataSubject[$i]['filename']; ?></a>
+                              <?php
+                                }
                               ?>
                             </td>
                           <?php } ?>

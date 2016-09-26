@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -39,7 +42,6 @@
               <li><a href="../application/search-subject.php"><i class="glyphicon glyphicon-search padding-right"></i>ตรวจสอบตารางสอบ</a></li>
               <li><a href="../application/change-password.php">เปลี่ยนรหัสผ่าน</a></li>
               <li class="active"><a href="../application/contact-us.php">ติดต่อเรา</a></li>
-              <li><a href="../application/logout.php">ออกจากระบบ</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->

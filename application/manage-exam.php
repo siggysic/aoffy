@@ -34,6 +34,8 @@
     $formatSection;
     $forSend;
 
+    $dataFilename;
+
     //Third, get subject have exam in term and year as you want.
     $sqlGetSubject = "SELECT * FROM subject WHERE subject.term = " . $_POST['term'] . " AND subject.year = " . $_POST['year'] . " ORDER BY subject.day ASC, subject.start_time ASC, subject.end_time ASC, subject.subject_number, subject.section ASC";
     $subject = mysql_query($sqlGetSubject) or die('Get subject error.');
@@ -231,6 +233,7 @@
   }
 
   if(isset($_POST['btnSave'])) {
+    
     $sql = "UPDATE subject SET exam_room='ไม่ได้ห้อง' WHERE term=" . "'" . $_POST['term_tmp'] . "'" . " AND year=" . "'" . $_POST['year_tmp'] . "'";
     mysql_query($sql) or die('Update exam room failed.');
     $storeSave = $_SESSION['storeSection'];
@@ -245,6 +248,23 @@
       $sql = "UPDATE subject SET exam_room=" . "'" . $formatExam . "'" . " WHERE subject_id=" . "'" . $storeSave[$key][0]['subject_id'] . "'";
       mysql_query($sql) or die('Update exam room failed.');
     }
+    
+
+/*
+      $_POST['idSubject']; exit();
+      $uploads_dir = SITE_ROOT."/uploads";
+      foreach ($_FILES["uploadPdf"]["error"] as $key => $error) {
+        if($error == UPLOAD_ERR_OK) {
+          $tmp_name = $_FILES["uploadPdf"]["tmp_name"][$key];
+          $name = basename($_FILES["uploadPdf"]["name"][$key]);
+          //if uploads to folder success.
+          if(move_uploaded_file($tmp_name, "$uploads_dir/$name")) {
+            //update pdf
+            
+          }
+        }
+      }
+*/
   }
 
 ?>
@@ -304,6 +324,7 @@
           <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse in">
             <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
             <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
+            <li><a href="../application/manage-pdf.php">ข้อมูลตารางสอบ PDF</a></li>
             <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
@@ -350,7 +371,7 @@
 
             <div class="container-fluid">
               <div class="area-padding text-right">
-                <form name="saveExam" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                <form name="saveExam" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                   <input name="btnSave" type="submit" class="btn btn-success area-padding" value="บันทึก">
                   <input type="hidden" name="term_tmp" value="<?php if(isset($temp['term'])){ echo $temp['term']; } ?>">
                   <input type="hidden" name="year_tmp" value="<?php if(isset($temp['year'])){ echo $temp['year']; } ?>">
@@ -365,6 +386,7 @@
                     <th>ชื่อวิชา</th>
                     <th>ตอนที่</th>
                     <th>ห้องสอบ</th>
+                    <th>File Pdf</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -393,7 +415,7 @@
                         <?php $subSection = $dataSubject[$i]['subject_number']. '-' .$dataSubject[$i]['section'];
                           if($checkSec != $subSection) {
                         ?>
-                          <td>
+                          <td style="max-width: 100px;">
                             <?php
                               $checkSec = $subSection;
                               echo $dataSubject[$i]['subject_number'];  
@@ -423,7 +445,15 @@
                             <?php }else { ?>
                               <td><?php echo "ไม่ได้ห้อง"; ?></td>
                             <?php } ?>
+                          <td>
+                            <?php if(isset($dataSubject[$i]['filename']) && empty($dataSubject[$i]['filename'])) { ?>
+                              <input type="file" name="uploadPdf<?php echo $dataSubject[$i]['subject_id'] ?>" accept="application/pdf" style="max-width: 200px;">
+                            <?php }else { ?>
+                              
+                            <?php echo $dataSubject[$i]['filename']; } ?>
+                          </td>
                           <?php } ?>
+
                       </tr>
                   <?php
                     }
@@ -431,7 +461,7 @@
                 </tbody>
               </table>
             </div><hr/>
-
+              
           <?php } /* end else if */ } /* end if */ ?>
 
         </div>

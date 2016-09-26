@@ -110,6 +110,7 @@ $room = mysql_query($sql) or die('Get room failed.');
           <ul id="sidebar" class="nav nav-pills nav-stacked panel-collapse collapse in">
             <li><a href="../application/subject.php">ข้อมูลวิชาสอบ</a></li>
             <li><a href="../application/room.php">ข้อมูลห้องสอบ</a></li>
+            <li><a href="../application/manage-pdf.php">ข้อมูลตารางสอบ PDF</a></li>
             <li><a href="../application/manage-exam.php">จัดห้องสอบอัตโนมัติ</a></li>
           </ul>
         </div>
